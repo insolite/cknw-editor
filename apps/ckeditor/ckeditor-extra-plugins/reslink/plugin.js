@@ -4,7 +4,7 @@
 	publish: function (html) {
 		var element = $('<div>' + html + '</div>');
 		element.find('a.res-link').each(function (e) {
-			//$(this).removeClass('res-link');
+			$(this).removeClass('res-link');
 			
 			//href = $(this).attr('href');
 			//$(this).attr('href', FileExplorer.resources['Documents'].dir + '/' + href);

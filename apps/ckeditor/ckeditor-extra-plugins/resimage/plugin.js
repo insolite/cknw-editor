@@ -5,7 +5,7 @@ CKEDITOR.plugins.add('resimage', {
 		var element = $('<div>' + html + '</div>');
 		element.find('img.res-image').each(function (e) {
 			$(this).removeClass('res-image');
-			$(this).removeAttribute('name');
+			$(this).removeAttr('filename');
 			
 			//src = $(this).attr('src');
 			//$(this).attr('src', FileExplorer.resources['Images'].dir + '/' + src);

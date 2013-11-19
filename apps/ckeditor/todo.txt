@@ -20,6 +20,7 @@
 +autosize for editor height
 -make tagmoving work for widgets
 -numbering
+-editing links to anchors as prepared links (anchorDialog)
 -fix showing opened file with white screen (floating bug)
 
 	TBD

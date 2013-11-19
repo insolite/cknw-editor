@@ -50,6 +50,7 @@ var FileExplorer = {
 			//'contextwidgets',
 		].join() //the same as join(',')
 		.concat(modeNames); // plugins for current mode
+		//CKEDITOR.config.disableNativeSpellChecker = false;
 		CKEDITOR.replace(editorId, { 
 			on: {
 				// maximize the editor's height on startup

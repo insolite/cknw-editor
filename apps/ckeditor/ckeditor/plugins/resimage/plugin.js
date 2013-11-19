@@ -6,6 +6,7 @@ CKEDITOR.plugins.add('resimage', {
 		element.find('img.res-image').each(function (e) {
 			$(this).removeClass('res-image');
 			$(this).removeAttribute('name');
+			
 			//src = $(this).attr('src');
 			//$(this).attr('src', FileExplorer.resources['Images'].dir + '/' + src);
 		});
@@ -36,7 +37,7 @@ CKEDITOR.plugins.add('resimage', {
 		if ( editor.contextMenu ) {
 			editor.contextMenu.addListener( function( element, selection ) {
 				var selection = editor.getSelection();
-				var selectedElement = selection.getSelectedElement() || editor.getStartElement();
+				var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 				var menu = {};
 				if (selectedElement) {
 					if (!selectedElement.isReadOnly()) {
@@ -49,7 +50,6 @@ CKEDITOR.plugins.add('resimage', {
 			});
 		}
 		
-		//Override listener from 'link' plugin
 		editor.on( 'doubleclick', function( evt ) {
 			var element = getSelectedLink( editor ) || evt.data.element;
 

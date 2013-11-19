@@ -87,7 +87,7 @@ CKEDITOR.plugins.add('preparedlinks', {
 				var menu = {};
 
 				if ( anchor && anchor.hasAttribute( 'name' ) ) {
-					menu.preparedLinksDialog = CKEDITOR.TRISTATE_OFF;
+					//menu.preparedLinksDialog = CKEDITOR.TRISTATE_OFF;
 				}
 
 				return menu;
@@ -99,16 +99,10 @@ CKEDITOR.plugins.add('preparedlinks', {
 			var selection = editor.getSelection();
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement) {
-				if (selectedElement.is('a')) {
-					//My future me, please forgive me, if you can...
-					evt.data.dialog = ( selectedElement.hasClass('prepared-link') &&
-										( (!selectedElement.getAttribute( 'href' ) ||
-										   selectedElement.getAttribute( 'href' ) == '#'
-										  ) ||
-										  !selectedElement.getChildCount()
-										)
-									  ) ? 'anchorsDialog' : 'link';
-					//
+				if (selectedElement.is('a') && selectedElement.hasClass('prepared-link') &&
+					(!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
+				   ) {
+					evt.data.dialog = 'anchorsDialog';
 				}
 			}
 		});

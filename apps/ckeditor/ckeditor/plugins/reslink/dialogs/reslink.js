@@ -21,17 +21,6 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 		minWidth : 400,
 		minHeight : 200,
  		
- 		onShow: function () {
-			var element = getSelectedLink( editor );
-			if (element) {
-				var name = element.getAttribute('href');
-				if (resourceExists(items, name)) {
-					var dialog = this;
-					dialog.getContentElement( 'main', 'filepath' ).setValue( name );
-				}
-			}
- 		},
- 		
 		contents :
 		[
 			{
@@ -50,6 +39,17 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 			}
 		],
 		
+ 		onShow: function () {
+			var element = getSelectedLink( editor );
+			if (element) {
+				var name = element.getAttribute('filename');
+				if (resourceExists(items, name)) {
+					var dialog = this;
+					dialog.getContentElement( 'main', 'filepath' ).setValue( name );
+				}
+			}
+ 		},
+ 		
 		onOk: function() {
 			editor.fire('saveSnapshot');
 			var dialog = this;
@@ -57,7 +57,8 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement && selectedElement.getName() == 'a') {
 				selectedElement.$.removeAttribute( 'data-cke-saved-href' ); //href won't assign without it
-				selectedElement.setAttribute('href', dialog.getValueOf( 'main', 'filepath' ));
+				selectedElement.setAttribute('href', FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf( 'main', 'filepath' ));
+				selectedElement.setAttribute('filename', dialog.getValueOf( 'main', 'filepath' ));
 			}
 			else {
 				var range = selection.getRanges(1)[0];
@@ -70,7 +71,8 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 				
 				// Apply style.
 				attributes = {
-					'href': dialog.getValueOf( 'main', 'filepath' ),
+					'href': FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf( 'main', 'filepath' ),
+					'filename': dialog.getValueOf( 'main', 'filepath' ),
 					'class': 'res-link',
 				};
 				var style = new CKEDITOR.style({ element: 'a', attributes: attributes } );

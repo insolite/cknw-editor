@@ -26,7 +26,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 			var element = selection.getSelectedElement() || selection.getStartElement();
 			if (element) {
 				//var name = element.getAttribute('src');
-				var name = element.getAttribute('name');
+				var name = element.getAttribute('filename');
 				if (resourceExists(items, name)) {
 					var dialog = this;
 					dialog.getContentElement( 'main', 'filepath' ).setValue( name );
@@ -58,9 +58,9 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 			var selection = editor.getSelection();
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement && selectedElement.getName() == 'img') {
-				//selectedElement.$.removeAttribute( 'data-cke-saved-href' ); //href won't assign without it
+				selectedElement.$.removeAttribute( 'data-cke-saved-src' ); //src won't assign without it
 				var filename = dialog.getValueOf('main', 'filepath');
-				selectedElement.setAttribute('name', filename);
+				selectedElement.setAttribute('filename', filename);
 				selectedElement.setAttribute('src', FileExplorer.resources['Images'].dir + '/' + filename);
 			}
 			else {
@@ -75,7 +75,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 				// Apply style.
 				var filename = dialog.getValueOf('main', 'filepath');
 				attributes = {
-					'name': filename,
+					'filename': filename,
 					'src': FileExplorer.resources['Images'].dir + '/' + filename,
 					'class': 'res-image',
 				};

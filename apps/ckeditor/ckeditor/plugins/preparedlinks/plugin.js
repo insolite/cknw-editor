@@ -69,6 +69,12 @@ CKEDITOR.plugins.add('preparedlinks', {
 					group: 'link', //TODO: create group
 					order: 1
 				},
+				anchorsDialog: {
+					label: 'Select anchor', //Edit prepared link here
+					command: 'anchorsDialog',
+					group: 'link', //TODO: create group
+					order: 1
+				},
 			});
 		}
 
@@ -76,6 +82,21 @@ CKEDITOR.plugins.add('preparedlinks', {
 		if ( editor.contextMenu ) {
 			//TODO: rewrite
 			editor.contextMenu.addListener( function( element, selection ) {
+				var selection = editor.getSelection();
+				var selectedElement = selection.getSelectedElement() || selection.getStartElement();
+				var menu = {};
+				if (selectedElement) {
+					if (!selectedElement.isReadOnly()) {
+						if (selectedElement.hasClass('prepared-link')) {
+							menu = { anchorsDialog: CKEDITOR.TRISTATE_OFF };
+						}
+						else if (selectedElement.hasAttribute('name') && !selectedElement.hasAttribute('href')) {
+							menu = { preparedLinksDialog: CKEDITOR.TRISTATE_OFF };
+						}
+					}
+				}
+				return menu;
+				/*
 				if ( !element || element.isReadOnly() )
 					return null;
 
@@ -90,7 +111,7 @@ CKEDITOR.plugins.add('preparedlinks', {
 					//menu.preparedLinksDialog = CKEDITOR.TRISTATE_OFF;
 				}
 
-				return menu;
+				return menu;*/
 			});
 		}
 		

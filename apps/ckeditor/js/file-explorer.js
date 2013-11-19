@@ -18,7 +18,7 @@ var FileExplorer = {
     },
     ckinit: function (editorId, filedata) {
     	var self = this;
-		//CKEDITOR.config.allowedContent = true;
+		CKEDITOR.config.allowedContent = true;
 		//CKEDITOR.config.format_tags = 'dl;dt;dd';
 		CKEDITOR.config.removePlugins = [
 			//'font',
@@ -55,11 +55,14 @@ var FileExplorer = {
 				// maximize the editor's height on startup
 				'instanceReady' : function( evt ) {
 					evt.editor.resize("100%", $(document).height() - self.editorHeightOffset); //$(editorId).clientHeight
-				}
+				},
 			}
 		});
 		var editor = CKEDITOR.instances[editorId];
 		editor.setData(filedata);
+		//$.each(loadedModes, function (key, modeName) {
+//			filedata = CKEDITOR.plugins.get(modeName).restore(editor.getData());
+		//});
 		editor['userdata'] = {};
 		editor.userdata['loadedModes'] = loadedModes;
     },

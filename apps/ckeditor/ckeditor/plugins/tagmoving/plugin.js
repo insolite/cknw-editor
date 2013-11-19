@@ -24,6 +24,11 @@ CKEDITOR.plugins.add('tagmoving', {
 	init: function (editor) {
 		var self = this;
 		self.resetCurrentElement(editor);
+		editor.on('contentDom', function() {
+			this.document.on('click', function( evt ) {
+				self.resetCurrentElement(editor);
+			});
+		});
 		editor.on('key', function(evt) {
 			keyCode = evt.data.keyCode;
 			//alert(keyCode);
@@ -36,9 +41,6 @@ CKEDITOR.plugins.add('tagmoving', {
 				KEYCODE_ARIGHT = CKEDITOR.ALT + 39,
 				KEYCODE_ADOWN = CKEDITOR.ALT + 40;
 			if (keyCode == KEYCODE_UP || keyCode == KEYCODE_DOWN || keyCode == KEYCODE_LEFT || keyCode == KEYCODE_RIGHT) {
-				//If not resetting, Alt selection always continues moving from the last element,
-				//even when actual selection totally changed.
-				//TODO: reset on click and/or selection event
 				self.resetCurrentElement(editor);
 			}
 			else if (keyCode == KEYCODE_AUP || keyCode == KEYCODE_ADOWN || keyCode == KEYCODE_ALEFT || keyCode == KEYCODE_ARIGHT) {
@@ -101,8 +103,8 @@ CKEDITOR.plugins.add('tagmoving', {
 							ranges[0].collapse(true);
 					    }
 				        selection.selectRanges([ranges[0]]);  // putting the current selection there
+						//evt.cancel();
 					}
-					//evt.cancel();
 				}
 			}
 		});

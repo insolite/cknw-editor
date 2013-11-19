@@ -31,8 +31,8 @@
 -validation
 -spellchecker, limited input
 
-optional
-	-disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
+	optional
+-disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
 
 	notes
 additional files:

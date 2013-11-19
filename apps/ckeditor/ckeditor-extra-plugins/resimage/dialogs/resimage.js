@@ -8,8 +8,8 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 	}
 	
 	var resourceExists = function (container, name) {
-		for (var i in items) {
-			if (items[i][1] == name) {
+		for (var i in container) {
+			if (container[i][1] == name) {
 				return true;
 			}
 		}

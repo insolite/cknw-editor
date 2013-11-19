@@ -87,11 +87,17 @@ CKEDITOR.plugins.add('preparedlinks', {
 				var menu = {};
 				if (selectedElement) {
 					if (!selectedElement.isReadOnly()) {
-						if (selectedElement.hasClass('prepared-link')) {
-							menu = { anchorsDialog: CKEDITOR.TRISTATE_OFF };
-						}
-						else if (selectedElement.hasAttribute('name') && !selectedElement.hasAttribute('href')) {
-							menu = { preparedLinksDialog: CKEDITOR.TRISTATE_OFF };
+						if (selectedElement.is('a')) {
+							if ((selectedElement.hasClass('prepared-link') &&
+								 (!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
+								) ||
+								selectedElement.getAttribute('href').indexOf('#') >= 0
+							   ) {
+								menu = { anchorsDialog: CKEDITOR.TRISTATE_OFF };
+							}
+							else if (selectedElement.hasAttribute('name') && !selectedElement.hasAttribute('href')) {
+								menu = { preparedLinksDialog: CKEDITOR.TRISTATE_OFF };
+							}
 						}
 					}
 				}
@@ -120,10 +126,14 @@ CKEDITOR.plugins.add('preparedlinks', {
 			var selection = editor.getSelection();
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement) {
-				if (selectedElement.is('a') && selectedElement.hasClass('prepared-link') &&
-					(!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
-				   ) {
-					evt.data.dialog = 'anchorsDialog';
+				if (selectedElement.is('a')) {
+					if ((selectedElement.hasClass('prepared-link') &&
+						 (!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
+						) ||
+						selectedElement.getAttribute('href').indexOf('#') >= 0
+					   ) {
+						evt.data.dialog = 'anchorsDialog';
+					}
 				}
 			}
 		});

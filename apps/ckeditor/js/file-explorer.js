@@ -22,6 +22,7 @@ var FileExplorer = {
 		//CKEDITOR.config.format_tags = 'dl;dt;dd';
 		CKEDITOR.config.removePlugins = [
 			//'font',
+			//'scayt',
 		].join(); //the same as join(',')
 		CKEDITOR.config.extraAllowedContent = [
 			'dl',
@@ -34,23 +35,26 @@ var FileExplorer = {
 			dl: 1,
 			dd: 1,
 		});
-		var modeNames = $('#sidebar-left > ul > li > a.current').parent().attr('modes');
+		var modeNamesString = $('#sidebar-left > ul > li > a.current').parent().attr('modes');
 		//TODO: default mode as plugin
 		//TODO: common mode
-		var loadedModes = [
-			'abbr',
-			'reslink',
-			'preparedlinks',
-			'resimage',
-			'tagmoving',
-		];
-		//modeNames = modeNames == '' ? ['default'] : modeNames.split(',');
-		modeNames = (modeNames == '' || modeNames == 'default') ? loadedModes : modeNames.split(',');
+		var loadedModes;
+		if (modeNamesString == '' || modeNamesString == 'default') {
+			loadedModes = [
+				'abbr',
+				'reslink',
+				'preparedlinks',
+				'resimage',
+				'tagmoving',
+			];
+		} else {
+			loadedModes = modeNamesString.split(',');
+		}
 		CKEDITOR.config.extraPlugins = [
 			//'contextwidgets',
-		].join() //the same as join(',')
-		.concat(modeNames); // plugins for current mode
-		//CKEDITOR.config.disableNativeSpellChecker = false;
+		].concat(loadedModes) // plugins for current mode
+		.join(); //the same as join(',')
+		CKEDITOR.config.disableNativeSpellChecker = false;
 		CKEDITOR.replace(editorId, { 
 			on: {
 				// maximize the editor's height on startup

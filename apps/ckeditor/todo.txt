@@ -18,9 +18,9 @@
 	+xlst from sunpp directory instead of copy in "web dir"
 +add class for prepared links to provide anchor selection dialog by doubleclick (also, implement that dialog)
 +autosize for editor height
++editing links to anchors as prepared links (anchorDialog)
 -make tagmoving work for widgets
 -numbering
--editing links to anchors as prepared links (anchorDialog)
 -fix showing opened file with white screen (floating bug)
 
 	TBD
@@ -28,8 +28,8 @@
 -remove unnecessary features (specialized editor (modes))
 
 	delayed
--validation
--spellchecker, limited input
+-validation, limited input
+-spellchecker
 
 	optional
 -disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)

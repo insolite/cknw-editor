@@ -3,6 +3,11 @@ CKEDITOR.plugins.add('tagmoving', {
 	//lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn',
 	//icons: '',
 	collapseSelection: false,
+	ignoreTags: [
+		'tbody',
+		//'br',
+		'body',
+	],
 	publish: function (html) {
 		return html;
 		//var element = $('<div>' + html + '</div>');
@@ -20,6 +25,49 @@ CKEDITOR.plugins.add('tagmoving', {
 	resetCurrentElement: function (editor) {
 		var self = editor; //this;
 		editor.currentElement = undefined;
+	},
+	getNextElement: function (keyCode, element) {
+		var self = this;
+		var KEYCODE_ALEFT = CKEDITOR.ALT + 37,
+			KEYCODE_AUP = CKEDITOR.ALT + 38,
+			KEYCODE_ARIGHT = CKEDITOR.ALT + 39,
+			KEYCODE_ADOWN = CKEDITOR.ALT + 40;
+		var nextElement = undefined;
+		if (keyCode == KEYCODE_AUP) {
+			nextElement = element.getPrevious();
+		}
+		else if (keyCode == KEYCODE_ADOWN) {
+			nextElement = element.getNext();
+		}
+		else if (keyCode == KEYCODE_ALEFT) {
+			nextElement = element.getParent();
+			if (self.getLevel(nextElement) <= 1) { //Prevent moving over body tag
+				nextElement = undefined;
+			}
+		}
+		else { //else if (keyCode == KEYCODE_ARIGHT) {
+			/*
+			nextElement = editor.currentElement.getFirst();
+			if (!nextElement.getFirst) { //Prevent moving under leaf
+				nextElement = undefined;
+			}
+			*/
+			if (element.getFirst) {
+				nextElement = element.getFirst();
+				if (nextElement.type != CKEDITOR.NODE_ELEMENT) {
+					nextElement = undefined;
+				}
+			}
+			else {
+				nextElement = undefined;
+			}
+		}
+		if (nextElement) {
+			if (self.ignoreTags.indexOf(nextElement.getName()) >= 0) {
+				return self.getNextElement(keyCode, nextElement) || nextElement; //TODO: test
+			}
+		}
+		return nextElement;
 	},
 	init: function (editor) {
 		var self = this;
@@ -59,36 +107,7 @@ CKEDITOR.plugins.add('tagmoving', {
 				}
 				
 				if (editor.currentElement) {
-					var nextElement = undefined;
-					if (keyCode == KEYCODE_AUP) {
-						nextElement = editor.currentElement.getPrevious();
-					}
-					else if (keyCode == KEYCODE_ADOWN) {
-						nextElement = editor.currentElement.getNext();
-					}
-					else if (keyCode == KEYCODE_ALEFT) {
-						nextElement = editor.currentElement.getParent();
-						if (self.getLevel(nextElement) <= 1) { //Prevent moving over body tag
-							nextElement = undefined;
-						}
-					}
-					else { //else if (keyCode == KEYCODE_ARIGHT) {
-						/*
-						nextElement = editor.currentElement.getFirst();
-						if (!nextElement.getFirst) { //Prevent moving under leaf
-							nextElement = undefined;
-						}
-						*/
-						if (editor.currentElement.getFirst) {
-							nextElement = editor.currentElement.getFirst();
-							if (nextElement.type != CKEDITOR.NODE_ELEMENT) {
-								nextElement = undefined;
-							}
-						}
-						else {
-							nextElement = undefined;
-						}
-					}
+					nextElement = self.getNextElement(keyCode, editor.currentElement);
 					
 					if (nextElement) {
 						editor.currentElement = nextElement;

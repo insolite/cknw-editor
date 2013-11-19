@@ -1,0 +1,44 @@
+	active
++sidebar with files (from file)
++patterns logic (widgets)
++abbreviations
++publication
++pack project
++default and specialized editors for different files
++links to pdfs
++later links
++figure out in undo/redo system
++prevent mode loading more that once
++insertion for images (from list)
++removal of helper classes, etc.: (append doc path for links with class="res-link"; remove class "prepared-link" and remove link after all)
++tag moving
++modes as plugins
++web access to sunpp
+	+preview images in dialog and view in editor
+	+xlst from sunpp directory instead of copy in "web dir"
++add class for prepared links to provide anchor selection dialog by doubleclick (also, implement that dialog)
++autosize for editor height
+-make tagmoving work for widgets
+-numbering
+-fix showing opened file with white screen (floating bug)
+-classes recovery after opening for resimage, reslink, etc.?
+
+	TBD
+-publication templates
+-remove unnecessary features (specialized editor (modes))
+
+	delayed
+-validation
+-spellchecker, limited input
+
+optional
+	-disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
+
+	notes
+additional files:
+	publish-template.html
+	output/
+
+	questions
+-how would be defined plugins removal
+-what to do with "./blanks" "./svg"

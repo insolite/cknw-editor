@@ -27,9 +27,13 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 			if (element) {
 				//var name = element.getAttribute('src');
 				var name = element.getAttribute('filename');
+				var dialog = this;
+				var selectElement = dialog.getContentElement( 'main', 'filepath' );
 				if (resourceExists(items, name)) {
-					var dialog = this;
-					dialog.getContentElement( 'main', 'filepath' ).setValue( name );
+					selectElement.setValue(name);
+				}
+				else {
+					selectElement.setValue(items[0][1]);
 				}
 			}
  		},
@@ -47,6 +51,18 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 						label : 'Image',
 						items: items,
 						'default': items[0][1],
+						onChange: function () {
+							var dialog = this.getDialog();
+							var previewElement = dialog.getContentElement('main', 'preview').getElement();
+							var imgPath = FileExplorer.resources['Images'].dir + '/' + this.getValue();
+							previewElement.setAttribute("src", imgPath);
+						},
+					},
+					{
+						type: 'html',
+						id: 'preview',
+						label: 'Preview',
+						html : '<img src="" />',
 					},
 				]
 			}

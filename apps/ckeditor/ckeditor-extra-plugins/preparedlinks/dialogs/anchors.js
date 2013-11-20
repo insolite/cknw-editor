@@ -86,7 +86,6 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 			else {
 				documentSelectElement.setValue(items[0][1]);
 			}
-			//documentSelectElement.fire('onChange');
 		},
  		
 		onOk: function() {

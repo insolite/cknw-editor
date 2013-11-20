@@ -23,6 +23,7 @@ var FileExplorer = {
 		CKEDITOR.config.removePlugins = [
 			//'font',
 			//'scayt',
+			'elementspath',
 		].join(); //the same as join(',')
 		CKEDITOR.config.extraAllowedContent = [
 			'dl',

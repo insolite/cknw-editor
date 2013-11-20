@@ -85,21 +85,78 @@ CKEDITOR.plugins.add('tagmoving', {
 		//console.log(nextElement);
 		return nextElement;
 	},
+	tagOptions: {
+		'p': [
+			{
+				label: 'clear',
+				click: function (element) {
+					element.setHtml('');
+				},
+			},
+		],
+		'a': [
+			{
+				label: 'clear href',
+				click: function (element) {
+					element.setAttribute('href', '');
+				},
+			},
+		],
+	},
 	updateElementsPath: function (editor, elementPath) {
 		var self = this;
 		var elementPath = self.getPath(editor.currentElement);
-		var bottom = editor.ui.space( 'bottom' );
+		var bottom = editor.ui.space('bottom');//.find('#elements-path');
+		if (bottom.find('#elements-path').count() == 0) {
+			bottom.append(new CKEDITOR.dom.element('div').setAttribute('id', 'elements-path'));
+		}
+		bottom = bottom.find('#elements-path').getItem(0);
+		bottom.setHtml('');
+		
 		html = '';
 		$.each(elementPath, function (index, element) {
-			html += $('<a></a>')
-			.attr({
-				href: '#',
-			})
-			.html(element.getName())
-			.append('&nbsp;&nbsp;')
-			.html();
+			var tagElement = new CKEDITOR.dom.element('a');
+			tagElement.setAttribute('href', '#');
+			tagElement.setHtml(element.getName());
+			tagElement.on('click', function (e) {
+				var elementName = element.getName();
+				var options = self.tagOptions[elementName];
+				if (options != undefined) {
+					var dropdownMenu = new CKEDITOR.dom.element('div');
+					dropdownMenu.addClass('tag-element-dd');
+					dropdownMenu.on('mouseout', function (event) {
+						/*
+						event = event.data.$;
+						var e = event.toElement || event.relatedTarget;
+				        if (e.parentNode == this || e == this) {
+							//TODO: ...
+							console.log(this);
+							this.remove(); //TODO: test
+							return;
+				        }
+				        */
+					});
+					$.each(options, function (index, option) {
+						var ddElement = new CKEDITOR.dom.element('a');
+						ddElement.setAttribute('href', '#');
+						ddElement.setHtml(option.label);
+						tagElement.on('click', function (e) {
+							option.click(element);
+							e.cancel();
+							this.getParent().remove(); //TODO: test
+						});
+						dropdownMenu.append(ddElement);
+					});
+					window['c'] = editor;
+					editor.document.getBody().append(dropdownMenu); //TODO: not content's body, but whole editor's body
+				}
+				e.cancel();
+			});
+			//else unknown tag, or no options for tag
+			bottom.append(tagElement);
+			bottom.appendHtml('&nbsp;&nbsp;');
 		});
-		bottom.setHtml(html);
+		//bottom.setHtml(html);
 	},
 	
 	init: function (editor) {

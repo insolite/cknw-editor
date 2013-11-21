@@ -24,7 +24,12 @@ var MainMenu = {
 	            'tooltip': 'Publish document',
 	            'icon': 'eye-open',
 	            onclick: function (event) {
-	            	FileExplorer.publish();
+	            	if (FileExplorer.currentFilepath) {
+	                	FileExplorer.publish();
+	                }
+	                else {
+	                	alert('Open file first');
+	                }
 	            }
 	        },
 	    },

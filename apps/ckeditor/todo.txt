@@ -25,6 +25,8 @@
 +dropdown menu with individual options for tags in tagmoving path
 +editor styles
 +make tagmoving work for widgets (widgets removed for 'dl', okay)
+-load requested editors (on loading cross-document anchors)
+-replace class with role for <a>
 -fix showing opened file with white screen (floating bug)
 
 	TBD
@@ -51,3 +53,4 @@ additional files:
 -what to do with "./blanks" "./svg"
 -how new files would be created? with certain name/as unsaved? add them to the plan file?
 -numbering
+-spellchecker

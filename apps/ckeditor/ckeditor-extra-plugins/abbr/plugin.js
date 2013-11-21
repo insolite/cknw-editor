@@ -1,5 +1,5 @@
 CKEDITOR.plugins.add('abbr', {
-	requires: 'widget',
+	//requires: 'widget',
 	//icons: '',
 	publish: function (html) {
 		return html;
@@ -7,6 +7,8 @@ CKEDITOR.plugins.add('abbr', {
 		//return element.html();
 	},
 	init: function (editor) {
+		/*
+		//Widget version:
 		editor.widgets.add('abbreviation', {
 			//allowedContent: 'dl(!simplebox); dt(!simplebox-title); dd(!simplebox-content)',
 			requiredContent: 'dl',
@@ -30,6 +32,7 @@ CKEDITOR.plugins.add('abbr', {
 				return element.name == 'dl';
 			}
 		});
+		*/
 		CKEDITOR.dialog.add( 'abbrDialog', CKEDITOR.plugins.get('abbr').path + 'dialogs/abbr.js' );
 		editor.addCommand( 'abbrDialog', new CKEDITOR.dialogCommand( 'abbrDialog' ));
 		editor.ui.addButton( 'Abbr', {

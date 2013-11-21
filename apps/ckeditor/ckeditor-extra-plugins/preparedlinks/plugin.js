@@ -88,14 +88,12 @@ CKEDITOR.plugins.add('preparedlinks', {
 				if (selectedElement) {
 					if (!selectedElement.isReadOnly()) {
 						if (selectedElement.is('a')) {
-							if ((selectedElement.hasClass('prepared-link') &&
-								 (!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
-								) ||
-								selectedElement.getAttribute('href').indexOf('#') >= 0
+							if (selectedElement.hasClass('prepared-link') ||
+								(selectedElement.getAttribute('href') && selectedElement.getAttribute('href').indexOf('#') >= 0)
 							   ) {
 								menu = { anchorsDialog: CKEDITOR.TRISTATE_OFF };
 							}
-							else if (selectedElement.hasAttribute('name') && !selectedElement.hasAttribute('href')) {
+							else if (selectedElement.hasAttribute('name')) {
 								menu = { preparedLinksDialog: CKEDITOR.TRISTATE_OFF };
 							}
 						}
@@ -127,10 +125,8 @@ CKEDITOR.plugins.add('preparedlinks', {
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement) {
 				if (selectedElement.is('a')) {
-					if ((selectedElement.hasClass('prepared-link') &&
-						 (!selectedElement.getAttribute('href') || selectedElement.getAttribute('href') == '#')
-						) ||
-						selectedElement.getAttribute('href').indexOf('#') >= 0
+					if (selectedElement.hasClass('prepared-link') ||
+						(selectedElement.getAttribute('href') && selectedElement.getAttribute('href').indexOf('#') >= 0)
 					   ) {
 						evt.data.dialog = 'anchorsDialog';
 					}

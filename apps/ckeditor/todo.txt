@@ -23,8 +23,8 @@
 +visualize tagmoving path
 +preview in resimage
 +dropdown menu with individual options for tags in tagmoving path
--make tagmoving work for widgets
--numbering
++editor styles
++make tagmoving work for widgets (widgets removed for 'dl', okay)
 -fix showing opened file with white screen (floating bug)
 
 	TBD
@@ -50,3 +50,4 @@ additional files:
 -how would be defined plugins removal
 -what to do with "./blanks" "./svg"
 -how new files would be created? with certain name/as unsaved? add them to the plan file?
+-numbering

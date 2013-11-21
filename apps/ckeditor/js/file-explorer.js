@@ -21,9 +21,8 @@ var FileExplorer = {
 		CKEDITOR.config.allowedContent = true;
 		//CKEDITOR.config.format_tags = 'dl;dt;dd';
 		CKEDITOR.config.removePlugins = [
-			//'font',
-			//'scayt',
-			'elementspath',
+			//'scayt', //works only for english
+			'elementspath', //using tagmoving instead
 		].join(); //the same as join(',')
 		CKEDITOR.config.extraAllowedContent = [
 			'dl',
@@ -56,6 +55,10 @@ var FileExplorer = {
 		].concat(loadedModes) // plugins for current mode
 		.join(); //the same as join(',')
 		CKEDITOR.config.disableNativeSpellChecker = false;
+		CKEDITOR.config.contentsCss = [
+			'ckeditor/contents.css', //default
+			'css/ckeditor-contents.css',
+		];
 		CKEDITOR.replace(editorId, { 
 			on: {
 				// maximize the editor's height on startup

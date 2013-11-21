@@ -1,0 +1,5 @@
+dl { background: #ddd; padding: 0; }
+	dl > dt, dl > dd { background: #eee; border: 1px solid #ccc; padding: 5px 10px; }
+	dl > dd { margin-left: 16px; }
+
+table, table > caption, th, tr, td { border: #000 1px solid; }

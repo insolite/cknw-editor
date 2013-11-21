@@ -41,11 +41,15 @@ CKEDITOR.dialog.add('abbrDialog', function (editor) {
 			if (currentElement) {
 				var currentElementTag = currentElement.getName();
 				if (currentElementTag == 'dt' || currentElementTag == 'dd') {
-					currentElement = currentElement.getParent().getParent(); //parent dl and div ckeditor wrapper
+					currentElement = currentElement.getParent();
+					//currentElement = currentElement.getParent(); //Widget version (div ckeditor wrapper)
 				}
+				/*
+				//Widget version (div ckeditor wrapper)
 				else if (currentElementTag == 'dl') { //Probably, this is impossible, cause of div wrapper over dl
 					currentElement = currentElement.getParent();
 				}
+				*/
 			}
 			var dt = editor.document.createElement('dt');
 			dt.setHtml(dialog.getValueOf( 'main', 'abbr' )); //setHtml returns html, not dt o_0
@@ -70,7 +74,8 @@ CKEDITOR.dialog.add('abbrDialog', function (editor) {
 			else {
 				editor.editable().append(dl);
 			}
-			var widget = editor.widgets.initOn( dl, 'abbreviation' );
+			//Widget version:
+			//var widget = editor.widgets.initOn( dl, 'abbreviation' );
 		},
 	};
 });

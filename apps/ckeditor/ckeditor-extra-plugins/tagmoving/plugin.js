@@ -30,15 +30,17 @@ CKEDITOR.plugins.add('tagmoving', {
 		var selection = editor.getSelection();
 		if (selection) {
 			newCurrentElement = /*selection.getSelectedElement() || */selection.getStartElement();
-			while (!newCurrentElement.getFirst) {
-				newCurrentElement = getParent();
+			if (newCurrentElement) {
+				while (!newCurrentElement.getFirst) {
+					newCurrentElement = getParent();
+				}
+				//newCurrentElement = newCurrentElement.getParent();
+				if (self.getLevel(newCurrentElement) <= 1) {
+					newCurrentElement = undefined;
+				}
+				editor.currentElement = newCurrentElement;
+				self.updateElementsPath(editor);
 			}
-			//newCurrentElement = newCurrentElement.getParent();
-			if (self.getLevel(newCurrentElement) <= 1) {
-				newCurrentElement = undefined;
-			}
-			editor.currentElement = newCurrentElement;
-			self.updateElementsPath(editor);
 		}
 	},
 	getPath: function (element) {
@@ -92,6 +94,17 @@ CKEDITOR.plugins.add('tagmoving', {
 					element.remove();
 				},
 			},
+			/*
+			{
+				label: 'Unwrap',
+				click: function (element) {
+					//var child = element.getFirst();
+					//element.renameNode('i');
+					//var parent = element.getParent();
+					//parent.setHtml(element.getHtml());
+				},
+			},
+			*/
 		],
 		'p': [
 			{
@@ -107,9 +120,13 @@ CKEDITOR.plugins.add('tagmoving', {
 		],
 		'a': [
 			{
-				label: 'Clear href',
+				label: 'Make italic',
 				click: function (element) {
-					element.setAttribute('href', '#');
+					var html = element.getHtml();
+					element.setHtml('');
+					var sumElement = new CKEDITOR.dom.element('i');
+					sumElement.setHtml(html);
+					element.append(sumElement);
 				},
 			},
 		],

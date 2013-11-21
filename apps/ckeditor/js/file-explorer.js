@@ -56,7 +56,6 @@ var FileExplorer = {
 		].concat(loadedModes) // plugins for current mode
 		.join(); //the same as join(',')
 		CKEDITOR.config.disableNativeSpellChecker = false;
-		CKEDITOR.config.contentsCss = 'css/ckeditor.css'; //TODO: include default css //TODO: not 'contentCss', but for whole editor
 		CKEDITOR.replace(editorId, { 
 			on: {
 				// maximize the editor's height on startup
@@ -74,9 +73,9 @@ var FileExplorer = {
 		editor.userdata['loadedModes'] = loadedModes;
     },
     create: function (filepath, filedata) {
-        var self = this;
-        self.currentFilepath = filepath;
-        CKEDITOR.instances.editor.setData(filedata);
+    	//TODO: implement
+        //var self = this;
+        //self.currentFilepath = filepath;
     },
     open: function(filepath) {
         var self = this;

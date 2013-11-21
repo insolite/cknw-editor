@@ -86,19 +86,31 @@ CKEDITOR.plugins.add('tagmoving', {
 		return nextElement;
 	},
 	tagOptions: {
+		'*': [
+			{
+				label: 'Delete',
+				click: function (element) {
+					element.remove();
+				},
+			},
+		],
 		'p': [
 			{
-				label: 'clear',
+				label: 'Make bold',
 				click: function (element) {
+					var html = element.getHtml();
 					element.setHtml('');
+					var sumElement = new CKEDITOR.dom.element('strong');
+					sumElement.setHtml(html);
+					element.append(sumElement);
 				},
 			},
 		],
 		'a': [
 			{
-				label: 'clear href',
+				label: 'Clear href',
 				click: function (element) {
-					element.setAttribute('href', '');
+					element.setAttribute('href', '#');
 				},
 			},
 		],
@@ -120,35 +132,32 @@ CKEDITOR.plugins.add('tagmoving', {
 			tagElement.setHtml(element.getName());
 			tagElement.on('click', function (e) {
 				var elementName = element.getName();
-				var options = self.tagOptions[elementName];
+				var options = self.tagOptions['*'];
+				if (self.tagOptions[elementName]) {
+					options = options.concat(self.tagOptions[elementName]);
+				}
 				if (options != undefined) {
 					var dropdownMenu = new CKEDITOR.dom.element('div');
 					dropdownMenu.addClass('tag-element-dd');
-					dropdownMenu.on('mouseout', function (event) {
-						/*
-						event = event.data.$;
-						var e = event.toElement || event.relatedTarget;
-				        if (e.parentNode == this || e == this) {
-							//TODO: ...
-							console.log(this);
-							this.remove(); //TODO: test
-							return;
-				        }
-				        */
+					dropdownMenu.on('mouseleave', function (event) {
+						this.remove();
 					});
 					$.each(options, function (index, option) {
-						var ddElement = new CKEDITOR.dom.element('a');
-						ddElement.setAttribute('href', '#');
+						var ddElement = new CKEDITOR.dom.element('p');
+						//ddElement.setAttribute('href', '#');
 						ddElement.setHtml(option.label);
-						tagElement.on('click', function (e) {
+						ddElement.on('click', function (e) {
 							option.click(element);
-							e.cancel();
-							this.getParent().remove(); //TODO: test
+							this.getParent().remove();
 						});
 						dropdownMenu.append(ddElement);
 					});
-					window['c'] = editor;
-					editor.document.getBody().append(dropdownMenu); //TODO: not content's body, but whole editor's body
+					editor.container.append(dropdownMenu);
+					var cPos = editor.container.getDocumentPosition();
+					var pX = e.data.$.pageX - cPos.x - 30;
+					var pY = e.data.$.pageY - cPos.y - dropdownMenu.getSize('height') + 24;
+					dropdownMenu.setStyle('left', pX + 'px');
+					dropdownMenu.setStyle('top', pY + 'px');
 				}
 				e.cancel();
 			});
@@ -156,71 +165,10 @@ CKEDITOR.plugins.add('tagmoving', {
 			bottom.append(tagElement);
 			bottom.appendHtml('&nbsp;&nbsp;');
 		});
-		//bottom.setHtml(html);
 	},
 	
 	init: function (editor) {
 		var self = this;
-		/*		
-		fnData = function() {
-		    var returnData = null;
-		    
-		    returnData = [
-		    	["[contact_name]", "Name", "Name"],
-		    ];
-		
-		    return returnData;
-		};
-		
-		editor.ui.addRichCombo('systemDataCmb', {
-			allowedContent: 'abbr[title]',
-			label: "System Data",
-			title: "System Data",
-			multiSelect: false,
-			panel: {
-				css : [ editor.config.contentsCss, CKEDITOR.getUrl( editor.skinPath + 'editor.css' ) ],
-				//voiceLabel : editor.lang.format.panelVoiceLabel
-			},
-			init: function () {
-				var self = this;
-				var content = fnData();
-				
-				$.each(content, function(index, value) {
-				    // value, html, text
-				    self.add(value[0], value[1], value[2]);
-				});
-			}
-		});
-		
-		editor.ui.addRichCombo('tokens', {
-			label: "Insert tokens",
-			title: "Insert tokens",
-			voiceLabel: "Insert tokens",
-			className: 'cke_format',
-			multiSelect: false,
-	
-			panel: {
-				css : [ editor.config.contentsCss, CKEDITOR.getUrl( editor.skinPath + 'editor.css' ) ],
-				voiceLabel : editor.lang.format.panelVoiceLabel
-			},
-	
-			init: function()
-			{
-				this.startGroup("Tokens");
-				//this.add('value', 'drop_text', 'drop_label');
-				for (var this_tag in tags) {
-					this.add(tags[this_tag][0], tags[this_tag][1], tags[this_tag][2]);
-				}
-			},
-	
-			onClick: function(value) {
-				editor.focus();
-				//editor.fire( 'saveSnapshot' );
-				editor.insertHtml(value);
-				//editor.fire( 'saveSnapshot' );
-			}
-		});
-		*/
 		self.resetCurrentElement(editor);
 		
 		editor.on('contentDom', function() {

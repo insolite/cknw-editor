@@ -1,1 +1,4 @@
-.tag-element-dd { position: absolute; bottom: 5px; z-index: 10000; background-color: #fff; }
+.tag-element-dd { position: absolute; padding: 1px;/* bottom: 5px;*/ z-index: 10000; background-color: #fff; border: #ccc 1px solid; }
+	.tag-element-dd > p { text-decoration: none; margin: 0; padding: 4px 8px 4px 8px; color: #000; cursor: default; } 
+	.tag-element-dd > p:hover { background-color: #e7efe7; }
+	

@@ -44,10 +44,9 @@ CKEDITOR.plugins.add('tagmoving', {
 	getPath: function (element) {
 		var self = this;
 		if (element) {
-			//console.log(element);
 			//return this.getPath(element.getParent()).push(element.getName()); //not working o_0
 			var list = this.getPath(element.getParent());
-			if (element && self.ignoreTags.indexOf(element.getName()) < 0) {
+			if (element.isVisible() && self.ignoreTags.indexOf(element.getName()) < 0) {
 				list.push(element);
 			}
 			return list;
@@ -115,7 +114,7 @@ CKEDITOR.plugins.add('tagmoving', {
 			},
 		],
 	},
-	updateElementsPath: function (editor, elementPath) {
+	updateElementsPath: function (editor) {
 		var self = this;
 		var elementPath = self.getPath(editor.currentElement);
 		var bottom = editor.ui.space('bottom');//.find('#elements-path');
@@ -124,47 +123,50 @@ CKEDITOR.plugins.add('tagmoving', {
 		}
 		bottom = bottom.find('#elements-path').getItem(0);
 		bottom.setHtml('');
-		
-		html = '';
-		$.each(elementPath, function (index, element) {
-			var tagElement = new CKEDITOR.dom.element('a');
-			tagElement.setAttribute('href', '#');
-			tagElement.setHtml(element.getName());
-			tagElement.on('click', function (e) {
-				var elementName = element.getName();
-				var options = self.tagOptions['*'];
-				if (self.tagOptions[elementName]) {
-					options = options.concat(self.tagOptions[elementName]);
-				}
-				if (options != undefined) {
-					var dropdownMenu = new CKEDITOR.dom.element('div');
-					dropdownMenu.addClass('tag-element-dd');
-					dropdownMenu.on('mouseleave', function (event) {
-						this.remove();
-					});
-					$.each(options, function (index, option) {
-						var ddElement = new CKEDITOR.dom.element('p');
-						//ddElement.setAttribute('href', '#');
-						ddElement.setHtml(option.label);
-						ddElement.on('click', function (e) {
-							option.click(element);
-							this.getParent().remove();
+		if (editor.currentElement) {
+			html = '';
+			$.each(elementPath, function (index, element) {
+				var tagElement = new CKEDITOR.dom.element('a');
+				tagElement.setAttribute('href', '#');
+				tagElement.setHtml(element.getName());
+				tagElement.on('click', function (e) {
+					var elementName = element.getName();
+					var options = self.tagOptions['*'];
+					if (self.tagOptions[elementName]) {
+						options = options.concat(self.tagOptions[elementName]);
+					}
+					if (options != undefined) {
+						var dropdownMenu = new CKEDITOR.dom.element('div');
+						dropdownMenu.addClass('tag-element-dd');
+						dropdownMenu.on('mouseleave', function (event) {
+							this.remove();
 						});
-						dropdownMenu.append(ddElement);
-					});
-					editor.container.append(dropdownMenu);
-					var cPos = editor.container.getDocumentPosition();
-					var pX = e.data.$.pageX - cPos.x - 30;
-					var pY = e.data.$.pageY - cPos.y - dropdownMenu.getSize('height') + 24;
-					dropdownMenu.setStyle('left', pX + 'px');
-					dropdownMenu.setStyle('top', pY + 'px');
-				}
-				e.cancel();
+						$.each(options, function (index, option) {
+							var ddElement = new CKEDITOR.dom.element('p');
+							//ddElement.setAttribute('href', '#');
+							ddElement.setHtml(option.label);
+							ddElement.on('click', function (e) {
+								option.click(element);
+								editor.focus();
+								self.resetCurrentElement(editor);
+								this.getParent().remove();
+							});
+							dropdownMenu.append(ddElement);
+						});
+						editor.container.append(dropdownMenu);
+						var cPos = editor.container.getDocumentPosition();
+						var pX = e.data.$.pageX - cPos.x - 16;
+						var pY = e.data.$.pageY - cPos.y - dropdownMenu.getSize('height') + 20;
+						dropdownMenu.setStyle('left', pX + 'px');
+						dropdownMenu.setStyle('top', pY + 'px');
+					}
+					e.cancel();
+				});
+				//else unknown tag, or no options for tag
+				bottom.append(tagElement);
+				bottom.appendHtml('&nbsp;&nbsp;');
 			});
-			//else unknown tag, or no options for tag
-			bottom.append(tagElement);
-			bottom.appendHtml('&nbsp;&nbsp;');
-		});
+		}
 	},
 	
 	init: function (editor) {

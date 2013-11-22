@@ -3,11 +3,8 @@
 	//icons: '',
 	publish: function (html) {
 		var element = $('<div>' + html + '</div>');
-		element.find('a.res-link').each(function (e) {
-			$(this).removeClass('res-link');
-			
-			//href = $(this).attr('href');
-			//$(this).attr('href', FileExplorer.resources['Documents'].dir + '/' + href);
+		element.find('a[role="res-link"]').each(function (e) {
+			$(this).removeAttr('role');
 		});
 		return element.html();
 	},
@@ -21,7 +18,7 @@
 		});
 		
 		// If the "menu" plugin is loaded, register the menu items.
-		if ( editor.addMenuItems ) {
+		if (editor.addMenuItems) {
 			editor.addMenuItems({
 				reslinkDialog: {
 					label: 'Edit document link', //label: editor.lang.link.menu,
@@ -33,39 +30,31 @@
 		}
 
 		// If the "contextmenu" plugin is loaded, register the listeners.
-		if ( editor.contextMenu ) {
-			editor.contextMenu.addListener( function( element, selection ) {
-				if ( !element || element.isReadOnly() )
-					return null;
-
-				var anchor = tryRestoreFakeAnchor( editor, element );
-
-				if ( !anchor && !( anchor = getSelectedLink( editor ) ) )
+		if (editor.contextMenu) {
+			editor.contextMenu.addListener(function(element, selection) {
+				if (!element || element.isReadOnly())
 					return null;
 
 				var menu = {};
 
-				if ( anchor.getAttribute( 'href' ) && anchor.getChildCount()) {
-					if (anchor.hasClass('res-link')) {
-						menu = { reslinkDialog: CKEDITOR.TRISTATE_OFF };
-					}
+				var role = element.getAttribute('role');
+				if (role == 'res-link') {
+					menu = { reslinkDialog: CKEDITOR.TRISTATE_OFF };
 				}
-
-				//if ( anchor && anchor.hasAttribute( 'name' ) )
-					//menu.anchor = menu.removeAnchor = CKEDITOR.TRISTATE_OFF;
 
 				return menu;
 			});
 		}
 		
-		editor.on( 'doubleclick', function( evt ) {
-			var element = getSelectedLink( editor ) || evt.data.element;
+		editor.on('doubleclick', function(evt) {
+			var element = evt.data.element;
 
-			if ( !element.isReadOnly() ) {
-				if ( element.is( 'a' ) ) {
-					if (element.hasClass('res-link')) {
+			if (!element.isReadOnly()) {
+				if (element.is('a')) {
+					var role = element.getAttribute('role');
+					if (role == 'res-link') {
 						evt.data.dialog = 'reslinkDialog';
-						editor.getSelection().selectElement( element );
+						editor.getSelection().selectElement(element);
 					}
 				}
 			}

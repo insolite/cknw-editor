@@ -3,12 +3,9 @@ CKEDITOR.plugins.add('resimage', {
 	//icons: '',
 	publish: function (html) {
 		var element = $('<div>' + html + '</div>');
-		element.find('img.res-image').each(function (e) {
-			$(this).removeClass('res-image');
+		element.find('img[role="res-image"]').each(function (e) {
+			$(this).removeAttr('role');
 			$(this).removeAttr('filename');
-			
-			//src = $(this).attr('src');
-			//$(this).attr('src', FileExplorer.resources['Images'].dir + '/' + src);
 		});
 		return element.html();
 	},
@@ -22,7 +19,7 @@ CKEDITOR.plugins.add('resimage', {
 		});
 		
 		// If the "menu" plugin is loaded, register the menu items.
-		if ( editor.addMenuItems ) {
+		if (editor.addMenuItems) {
 			editor.addMenuItems({
 				resimageDialog: {
 					label: 'Edit image', //label: editor.lang.link.menu,
@@ -34,30 +31,31 @@ CKEDITOR.plugins.add('resimage', {
 		}
 
 		// If the "contextmenu" plugin is loaded, register the listeners.
-		if ( editor.contextMenu ) {
-			editor.contextMenu.addListener( function( element, selection ) {
-				var selection = editor.getSelection();
-				var selectedElement = selection.getSelectedElement() || selection.getStartElement();
+		if (editor.contextMenu) {
+			editor.contextMenu.addListener(function(element, selection) {
+				if (!element || element.isReadOnly())
+					return null;
+
 				var menu = {};
-				if (selectedElement) {
-					if (!selectedElement.isReadOnly()) {
-						if (selectedElement.hasClass('res-image')) {
-							menu = { resimageDialog: CKEDITOR.TRISTATE_OFF };
-						}
-					}
+
+				var role = element.getAttribute('role');
+				if (role == 'res-image') {
+					menu = { resimageDialog: CKEDITOR.TRISTATE_OFF };
 				}
+
 				return menu;
 			});
 		}
 		
-		editor.on( 'doubleclick', function( evt ) {
-			var element = getSelectedLink( editor ) || evt.data.element;
+		editor.on('doubleclick', function(evt) {
+			var element = evt.data.element;
 
-			if ( !element.isReadOnly() ) {
-				if ( element.is( 'img' ) ) {
-					if (element.hasClass('res-image')) {
+			if (!element.isReadOnly()) {
+				if (element.is('img')) {
+					var role = element.getAttribute('role');
+					if (role == 'res-image') {
 						evt.data.dialog = 'resimageDialog';
-						editor.getSelection().selectElement( element );
+						editor.getSelection().selectElement(element);
 					}
 				}
 			}

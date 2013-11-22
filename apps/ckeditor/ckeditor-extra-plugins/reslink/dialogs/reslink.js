@@ -40,12 +40,13 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 		],
 		
  		onShow: function () {
-			var element = getSelectedLink( editor );
+			var selection = editor.getSelection();
+			var element = selection.getSelectedElement() || selection.getStartElement();
 			if (element) {
 				var name = element.getAttribute('filename');
 				if (resourceExists(items, name)) {
 					var dialog = this;
-					dialog.getContentElement( 'main', 'filepath' ).setValue( name );
+					dialog.getContentElement('main', 'filepath').setValue(name);
 				}
 			}
  		},
@@ -56,28 +57,27 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 			var selection = editor.getSelection();
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement && selectedElement.getName() == 'a') {
-				selectedElement.$.removeAttribute( 'data-cke-saved-href' ); //href won't assign without it
-				selectedElement.setAttribute('href', FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf( 'main', 'filepath' ));
-				selectedElement.setAttribute('filename', dialog.getValueOf( 'main', 'filepath' ));
+				selectedElement.$.removeAttribute('data-cke-saved-href'); //href won't assign without it
+				selectedElement.setAttribute('href', FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf('main', 'filepath'));
+				selectedElement.setAttribute('filename', dialog.getValueOf('main', 'filepath'));
 			}
 			else {
 				var range = selection.getRanges(1)[0];
 				// Use link URL as text with a collapsed cursor.
-				if ( range.collapsed ) {
-					var text = new CKEDITOR.dom.text(dialog.getValueOf( 'main', 'filepath' ), editor.document);
-					range.insertNode( text );
-					range.selectNodeContents( text );
+				if (range.collapsed) {
+					var text = new CKEDITOR.dom.text(dialog.getValueOf('main', 'filepath'), editor.document);
+					range.insertNode(text);
+					range.selectNodeContents(text);
 				}
 				
-				// Apply style.
 				attributes = {
-					'href': FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf( 'main', 'filepath' ),
-					'filename': dialog.getValueOf( 'main', 'filepath' ),
-					'class': 'res-link',
+					'href': FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf('main', 'filepath'),
+					'filename': dialog.getValueOf('main', 'filepath'),
+					'role': 'res-link',
 				};
-				var style = new CKEDITOR.style({ element: 'a', attributes: attributes } );
+				var style = new CKEDITOR.style({ element: 'a', attributes: attributes });
 				style.type = CKEDITOR.STYLE_INLINE; // need to override... dunno why.
-				style.applyToRange( range );
+				style.applyToRange(range);
 				range.select();
 			}
 		},

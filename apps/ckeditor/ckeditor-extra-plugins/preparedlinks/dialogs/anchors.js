@@ -28,8 +28,8 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 						onChange: function () {
 							var dialog = this.getDialog();
 							
-							var documentSelectElement = dialog.getContentElement( 'main', 'document' );
-							var anchorSelectElement = dialog.getContentElement( 'main', 'anchor' );
+							var documentSelectElement = dialog.getContentElement('main', 'document');
+							var anchorSelectElement = dialog.getContentElement('main', 'anchor');
 							anchorSelectElement.clear();
 							var filepath = documentSelectElement.getValue();
 							$('#sidebar-left > ul > li[path="' + filepath + '"] > a.opened').each(function (e) {
@@ -37,11 +37,11 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 								var anchors = openedEditor.document.find('a');
 								for (var i = 0; i < anchors.count(); i++) {
 									anchor = anchors.getItem(i);
-									if ( anchor.hasAttribute('name') &&
-										 ( !anchor.hasAttribute( 'href' ) ||
-										   anchor.getAttribute( 'href' ) == '#'
-										 )
-									   ) {
+									if (anchor.hasAttribute('name') &&
+										 (!anchor.hasAttribute('href') ||
+										   anchor.getAttribute('href') == '#'
+										)
+									  ) {
 										anchorSelectElement.add(anchor.getText(), anchor.getAttribute('name'));
 									}
 								}
@@ -61,9 +61,9 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 		onShow: function () {
 			var dialog = this;
 			
-			var documentSelectElement = dialog.getContentElement( 'main', 'document' );
+			var documentSelectElement = dialog.getContentElement('main', 'document');
 			documentSelectElement.clear();
-			var anchorSelectElement = dialog.getContentElement( 'main', 'anchor' );
+			var anchorSelectElement = dialog.getContentElement('main', 'anchor');
 			var items = [];
 			$('#sidebar-left > ul > li > a.opened').each(function (e) {
 				items.push([$(this).text(), $(this).parent().attr('path')]);
@@ -92,15 +92,15 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 			var dialog = this;
 			
 			editor.fire('saveSnapshot');
-			var documentSelectElement = dialog.getContentElement( 'main', 'document' );
-			var anchorSelectElement = dialog.getContentElement( 'main', 'anchor' );
+			var documentSelectElement = dialog.getContentElement('main', 'document');
+			var anchorSelectElement = dialog.getContentElement('main', 'anchor');
 			var filepath = documentSelectElement.getValue();
 			var anchor = anchorSelectElement.getValue();
 			var selection = editor.getSelection();
 			var link = selection.getSelectedElement() || selection.getStartElement();
-			//link.$.removeAttribute( 'data-cke-saved-href' ); //href won't assign without it
+			//link.$.removeAttribute('data-cke-saved-href'); //href won't assign without it
 			link.setAttribute('href', filepath + '#' + anchor);
-			link.removeClass('prepared-link');
+			link.removeAttribute('role');
 			link.removeAttribute('id');
 		},
 	};

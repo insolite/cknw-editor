@@ -26,12 +26,12 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
 			var dialog = this;
 			var preparedLinks = [];
 			
-			var selectElement = dialog.getContentElement( 'main', 'plink' );
+			var selectElement = dialog.getContentElement('main', 'plink');
 			selectElement.clear();
 			$('#sidebar-left > ul > li > a.opened').each(function (e) {
 				var filepath = $(this).parent().attr('path');
 				var openedEditor = FileExplorer.getEditorByFilepath($(this).parent().attr('path'));
-				var links = openedEditor.document.find('a.prepared-link');
+				var links = openedEditor.document.find('a[role="prepared-link"]');
 				for (var i = 0; i < links.count(); i++) {
 					link = links.getItem(i);
 					//console.log(filepath + '#' + link.getAttribute('id'));
@@ -41,21 +41,22 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
  		},
  		
 		onOk: function() {
-			var element = getSelectedLink( editor );
+			var selection = editor.getSelection();
+			var element = selection.getSelectedElement() || selection.getStartElement();
 			if (element) {
 				editor.fire('saveSnapshot');
 				var dialog = this;
-				var plinkInfo = dialog.getValueOf( 'main', 'plink' ).split('#');
+				var plinkInfo = dialog.getValueOf('main', 'plink').split('#');
 				var page = plinkInfo[0];
 				var linkId = plinkInfo[1];
 				var linkEditor = FileExplorer.getEditorByFilepath(page);
-				var link = linkEditor.document.find('a.prepared-link#' + linkId).getItem(0);
+				var link = linkEditor.document.find('a[role="prepared-link"]#' + linkId).getItem(0);
 				var selection = editor.getSelection();
 				var element = selection.getSelectedElement() || selection.getStartElement();
 				var page = $('#sidebar-left').find('ul > li > a.current').parent().attr('path');
-				//link.$.removeAttribute( 'data-cke-saved-href' ); //href won't assign without it
+				//link.$.removeAttribute('data-cke-saved-href'); //href won't assign without it
 				link.setAttribute('href', page + '#' + element.getAttribute('name'));
-				link.removeClass('prepared-link');
+				link.removeAttribute('prepared-link');
 				link.removeAttribute('id');
 			}
 		},

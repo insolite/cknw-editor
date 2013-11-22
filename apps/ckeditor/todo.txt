@@ -27,7 +27,11 @@
 +make tagmoving work for widgets (widgets removed for 'dl', okay)
 -load requested editors (on loading cross-document anchors)
 -replace class with role for <a>
+-use external dropdown menu
 -fix showing opened file with white screen (floating bug)
+-numbering in dropdown menu for tags
+-possibility for insertion of "./blanks" "./svg"
+-file creation
 
 	TBD
 -publication templates
@@ -35,13 +39,15 @@
 
 	delayed
 -validation, limited input
--spellchecker
+-spellchecker (offline)
 
 	optional
 -disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
 
 	cancelled
--classes recovery after opening for resimage, reslink, etc.?
+
+	final
+-clean markup for source documents
 
 	notes
 additional files:
@@ -49,8 +55,5 @@ additional files:
 	output/
 
 	questions
--how would be defined plugins removal
--what to do with "./blanks" "./svg"
--how new files would be created? with certain name/as unsaved? add them to the plan file?
--numbering
++how would be defined plugins removal
 -spellchecker

@@ -12,6 +12,8 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 		title : 'Anchor Selection',
 		minWidth : 400,
 		minHeight : 200,
+		maxWidth : 500,
+		maxHeight : 300,
  		
 		contents :
 		[

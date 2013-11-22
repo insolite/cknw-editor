@@ -11,6 +11,7 @@ var FileExplorer = {
     nextId: 1,
     editors: {},
     resources: {},
+    files: {},
     PLAN_FILENAME: 'plan.wprj',
     getEditorByFilepath: function (filepath) {
     	var textarea = $('#workspace > textarea[filepath="' + filepath + '"]');
@@ -22,6 +23,8 @@ var FileExplorer = {
 		//CKEDITOR.config.format_tags = 'dl;dt;dd';
 		CKEDITOR.config.removePlugins = [
 			//'scayt', //works only for english
+			//'resize', //is not needed, but disaling this plugin removes bottom panel,
+			//which is needed for element path displaying
 			'elementspath', //using tagmoving instead
 		].join(); //the same as join(',')
 		CKEDITOR.config.extraAllowedContent = [
@@ -46,13 +49,14 @@ var FileExplorer = {
 				'preparedlinks',
 				'resimage',
 				'tagmoving',
-				'enumerating'
+				'enumerating',
 			];
 		} else {
 			loadedModes = modeNamesString.split(',');
 		}
 		CKEDITOR.config.extraPlugins = [
 			//'contextwidgets',
+			//'maxheight', //is not working correctly
 		].concat(loadedModes) // plugins for current mode
 		.join(); //the same as join(',')
 		CKEDITOR.config.disableNativeSpellChecker = false;
@@ -82,6 +86,7 @@ var FileExplorer = {
 		editor.userdata['loadedModes'] = loadedModes;
     },
     create: function (filepath, filedata) {
+    	//self.files
     	//TODO: implement
         //var self = this;
         //self.currentFilepath = filepath;
@@ -233,13 +238,17 @@ var FileExplorer = {
     },
     initSidebar: function () {
         var self = this;
+        self.files = {};
 		$('#sidebar-left').append(Xslt.getResult(self.PLAN_FILENAME, "xsl/pages.xsl"));
-		$('#sidebar-left > ul > li[path!=""]').click(function (e) {
-			$('#sidebar-left > ul > li > a.filelabel').removeClass('current');
-			$(this).find('> a.filelabel').addClass('current opened');
-			$(this).find('> div.close').show();
-			self.open($(this).attr('path'));
-			e.preventDefault();
+		$('#sidebar-left > ul > li[path!=""]').each(function () {
+			//self.files[$(this).attr('path')];
+			$(this).click(function (e) {
+				$('#sidebar-left > ul > li > a.filelabel').removeClass('current');
+				$(this).find('> a.filelabel').addClass('current opened');
+				$(this).find('> div.close').show();
+				self.open($(this).attr('path'));
+				e.preventDefault();
+			});
 		});
 		$('#sidebar-left > ul > li > div.close').click(function (e) {
 			var li = $(this).parent();

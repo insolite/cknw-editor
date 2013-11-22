@@ -31,9 +31,10 @@
 +show numbering level on element
 +possibility for insertion of "./blanks" "./svg"
 -load requested editors (on loading cross-document anchors)
--pdf preview
+-pdf preview (use pdf.js instead of link)
 -file creation
 -fix showing opened file with white screen (floating bug)
+-set max size for dialogs
 
 	TBD
 -publication templates
@@ -47,6 +48,7 @@
 -disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
 
 	cancelled
+how would be defined plugins removal
 
 	final
 -clean markup for source documents
@@ -57,5 +59,4 @@ additional files:
 	output/
 
 	questions
-+how would be defined plugins removal
--spellchecker
+spellchecker

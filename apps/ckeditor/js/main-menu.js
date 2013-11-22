@@ -1,13 +1,13 @@
 var MainMenu = {
 	elements: {
-	    'file': {/*
+	    'file': {
 	        'new': {
 	            'tooltip': 'Create new file',
 	            'icon': 'file',
 	            onclick: function (event) {
 	                FileExplorer.create(undefined, '');
 	            }
-	        },*/
+	        },
 	        'save': {
 	            'tooltip': 'Save file',
 	            'icon': 'hdd',

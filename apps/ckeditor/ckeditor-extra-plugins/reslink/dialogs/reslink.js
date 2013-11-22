@@ -24,6 +24,8 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 		title : 'Link Properties',
 		minWidth : 400,
 		minHeight : 200,
+		maxWidth : 500,
+		maxHeight : 300,
  		
 		contents :
 		[
@@ -38,6 +40,34 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 						label : 'Document',
 						items: itemsList,
 						'default': itemsList[0][1],
+					},
+					{
+						type : 'button',
+						id : 'view',
+						label : 'View',
+						'onClick': function (e) {
+							var dialog = this.getDialog();
+							document.location = dialog.getContentElement('main', 'filepath').getValue();
+							//TODO: use pdf.js
+							/*
+							var dialog = this.getDialog();
+							var spawn = require('child_process').spawn;
+							var viewer = '';
+							var pdf = spawn(viever, [process.cwd() + '/' + dialog.getContentElement('main', 'filepath').getValue()]);
+						
+							ls.stdout.on('data', function (data) {
+								console.log('stdout: ' + data);
+							});
+							
+							ls.stderr.on('data', function (data) {
+								console.log('stderr: ' + data);
+							});
+							
+							ls.on('close', function (code) {
+								console.log('child process exited with code ' + code);
+							});
+							*/
+						},
 					},
 				]
 			}

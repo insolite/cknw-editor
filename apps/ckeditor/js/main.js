@@ -3,6 +3,7 @@ $(window).ready(function () {
 	FileExplorer.init();
 	
 	$(window).resize(function () {
+		//editor.maximizeHeightNow(); //is not working correctly
 		var height = $(window).height() - FileExplorer.editorHeightOffset;
 		var editor = FileExplorer.getCurrentEditor();
 		if (editor) {

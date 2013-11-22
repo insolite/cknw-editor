@@ -3,6 +3,7 @@ CKEDITOR.plugins.add('enumerating', {
 	//icons: '',
 	publish: function (html) {
 		var element = $('<div>' + html + '</div>');
+		//TODO: as separate css file
 		element.prepend('\
 		<style type="text/css">\
 		body { counter-reset: enum1; }\
@@ -67,7 +68,14 @@ CKEDITOR.plugins.add('enumerating', {
 					type: 'element',
 					label: 'Level 1',
 					click: function (element) {
-						element.addClass('enumerable');
+						if (element.hasClass('enumerable')) {
+							element.removeClass('enumerable-1');
+							element.removeClass('enumerable-2');
+							element.removeClass('enumerable-3');
+						}
+						else {
+							element.addClass('enumerable');
+						}
 						element.addClass('enumerable-1');
 					},
 				},
@@ -75,7 +83,14 @@ CKEDITOR.plugins.add('enumerating', {
 					type: 'element',
 					label: 'Level 2',
 					click: function (element) {
-						element.addClass('enumerable');
+						if (element.hasClass('enumerable')) {
+							element.removeClass('enumerable-1');
+							element.removeClass('enumerable-2');
+							element.removeClass('enumerable-3');
+						}
+						else {
+							element.addClass('enumerable');
+						}
 						element.addClass('enumerable-2');
 					},
 				},
@@ -83,7 +98,14 @@ CKEDITOR.plugins.add('enumerating', {
 					type: 'element',
 					label: 'Level 3',
 					click: function (element) {
-						element.addClass('enumerable');
+						if (element.hasClass('enumerable')) {
+							element.removeClass('enumerable-1');
+							element.removeClass('enumerable-2');
+							element.removeClass('enumerable-3');
+						}
+						else {
+							element.addClass('enumerable');
+						}
 						element.addClass('enumerable-3');
 					},
 				},

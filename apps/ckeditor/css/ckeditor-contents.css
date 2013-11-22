@@ -3,3 +3,26 @@ dl { background: #ddd; padding: 0; }
 	dl > dd { margin-left: 16px; }
 
 table, table > caption, th, tr, td { border: #000 1px solid; }
+
+body { counter-reset: enum1; }
+p.enumerable:before {
+	color: #aa0;
+}
+p.enumerable-1 {
+	counter-reset: enum2 enum3;
+}
+p.enumerable-1:before {
+	counter-increment: enum1;
+	content: counter(enum1) ". ";
+}
+p.enumerable-2 {
+	counter-reset: enum3;
+}
+p.enumerable-2:before {
+	counter-increment: enum2;
+	content: counter(enum1) "." counter(enum2) ". ";
+}
+p.enumerable-3:before {
+	counter-increment: enum3;
+	content: counter(enum1) "." counter(enum2) "." counter(enum3) ". ";
+}

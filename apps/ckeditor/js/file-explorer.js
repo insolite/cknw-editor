@@ -46,6 +46,7 @@ var FileExplorer = {
 				'preparedlinks',
 				'resimage',
 				'tagmoving',
+				'enumerating'
 			];
 		} else {
 			loadedModes = modeNamesString.split(',');

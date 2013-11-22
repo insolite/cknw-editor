@@ -1,8 +1,50 @@
 CKEDITOR.plugins.add('tagmoving', {
-	requires: 'richcombo',
+	//requires: '',
 	//lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn',
 	//icons: '',
 	collapseSelection: false,
+	publish: function (html) {
+		return html;
+		//var element = $('<div>' + html + '</div>');
+		//return element.html();
+	},
+	tagOptions: {
+		'*': [
+			{
+				type: 'element',
+				label: 'Delete',
+				click: function (element) {
+					element.remove();
+				},
+			},
+		],
+		'p': [
+			{
+				type: 'element',
+				label: 'Make bold',
+				click: function (element) {
+					var html = element.getHtml();
+					element.setHtml('');
+					var sumElement = new CKEDITOR.dom.element('strong');
+					sumElement.setHtml(html);
+					element.append(sumElement);
+				},
+			},
+		],
+		'a': [
+			{
+				type: 'element',
+				label: 'Make italic',
+				click: function (element) {
+					var html = element.getHtml();
+					element.setHtml('');
+					var sumElement = new CKEDITOR.dom.element('i');
+					sumElement.setHtml(html);
+					element.append(sumElement);
+				},
+			},
+		],
+	},
 	ignoreTags: [
 		'html',
 		'body',
@@ -10,11 +52,6 @@ CKEDITOR.plugins.add('tagmoving', {
 		//'tbody',
 		//'br',
 	],
-	publish: function (html) {
-		return html;
-		//var element = $('<div>' + html + '</div>');
-		//return element.html();
-	},
 	getLevel: function (element, count) {
 		count = count == undefined ? -1 : count;
 		if (element) {
@@ -85,110 +122,6 @@ CKEDITOR.plugins.add('tagmoving', {
 		} while (nextElement && (nextElement.type != CKEDITOR.NODE_ELEMENT || self.ignoreTags.indexOf(nextElement.getName()) >= 0));
 		//console.log(nextElement);
 		return nextElement;
-	},
-	tagOptions: {
-		'*': [
-			{
-				type: 'element',
-				label: 'Delete',
-				click: function (element) {
-					element.remove();
-				},
-			},
-			/*
-			{
-				label: 'Unwrap',
-				click: function (element) {
-					//var child = element.getFirst();
-					//element.renameNode('i');
-					//var parent = element.getParent();
-					//parent.setHtml(element.getHtml());
-				},
-			},
-			*/
-		],
-		'p': [
-			{
-				type: 'element',
-				label: 'Make bold',
-				click: function (element) {
-					var html = element.getHtml();
-					element.setHtml('');
-					var sumElement = new CKEDITOR.dom.element('strong');
-					sumElement.setHtml(html);
-					element.append(sumElement);
-				},
-			},
-			{
-				type: 'container',
-				label: 'Enumerable',
-				children: [
-					{
-						type: 'element',
-						label: 'Clear',
-						click: function (element) {
-							for (var i = 1; i <= 3; i++) {
-								element.removeClass('enumerable-' + i);
-							}
-						},
-					},
-					{
-						type: 'container',
-						label: 'Test',
-						children: [
-							{
-								type: 'element',
-								label: 'test 2',
-								click: function (element) {
-									element.addClass('enumerable-2');
-								},
-							},
-							{
-								type: 'element',
-								label: 'test 3',
-								click: function (element) {
-									element.addClass('enumerable-3');
-								},
-							},
-						],
-					},
-					{
-						type: 'element',
-						label: 'Level 1',
-						click: function (element) {
-							element.addClass('enumerable-1');
-						},
-					},
-					{
-						type: 'element',
-						label: 'Level 2',
-						click: function (element) {
-							element.addClass('enumerable-2');
-						},
-					},
-					{
-						type: 'element',
-						label: 'Level 3',
-						click: function (element) {
-							element.addClass('enumerable-3');
-						},
-					},
-				],
-			},
-		],
-		'a': [
-			{
-				type: 'element',
-				label: 'Make italic',
-				click: function (element) {
-					var html = element.getHtml();
-					element.setHtml('');
-					var sumElement = new CKEDITOR.dom.element('i');
-					sumElement.setHtml(html);
-					element.append(sumElement);
-				},
-			},
-		],
 	},
 	getDropdownElements: function (elementsInfo, selectedElement, editor) {
 		var self = this;

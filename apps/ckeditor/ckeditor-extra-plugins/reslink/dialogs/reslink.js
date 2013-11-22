@@ -1,20 +1,24 @@
 CKEDITOR.dialog.add('reslinkDialog', function (editor) {
-	var items = [];
-	for (var i in FileExplorer.resources['Documents'].files) {
-		file = FileExplorer.resources['Documents'].files[i];
-		if (file['gen-type'] == 'file') {
-			items.push([file['name'], file['rel-path']]);
-		}
-	}
-	
-	var resourceExists = function (container, name) {
-		for (var i in items) {
-			if (items[i][1] == name) {
-				return true;
+	var items = {};
+	var sources = [
+		FileExplorer.resources['Documents'],
+		FileExplorer.resources['Blanks'],
+	];
+	$.each(sources, function (index, source) {
+		$.each(source.files, function (index, file) {
+			if (file['gen-type'] == 'file') {
+				items[file['dir'] + '/' + file['name']] = {
+					'filename': file['filename'],
+					'dir': file['dir'],
+				};
 			}
-		}
-		return false;
-	};
+		});
+	});
+	
+	itemsList = [];
+	$.each(items, function (index, item) {
+		itemsList.push([item['filename'], item['dir'] + '/' + item['filename']]);
+	});
 	
 	return {
 		title : 'Link Properties',
@@ -32,8 +36,8 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 						type : 'select',
 						id : 'filepath',
 						label : 'Document',
-						items: items,
-						'default': items[0][1],
+						items: itemsList,
+						'default': itemsList[0][1],
 					},
 				]
 			}
@@ -43,10 +47,14 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 			var selection = editor.getSelection();
 			var element = selection.getSelectedElement() || selection.getStartElement();
 			if (element) {
-				var name = element.getAttribute('filename');
-				if (resourceExists(items, name)) {
-					var dialog = this;
-					dialog.getContentElement('main', 'filepath').setValue(name);
+				var href = element.getAttribute('href');
+				var dialog = this;
+				var selectElement = dialog.getContentElement('main', 'filepath');
+				if (items.hasOwnProperty(href)) {
+					selectElement.setValue(href);
+				}
+				else {
+					selectElement.setValue(itemsList[0][1]);
 				}
 			}
  		},
@@ -58,8 +66,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 			var selectedElement = selection.getSelectedElement() || selection.getStartElement();
 			if (selectedElement && selectedElement.getName() == 'a') {
 				selectedElement.$.removeAttribute('data-cke-saved-href'); //href won't assign without it
-				selectedElement.setAttribute('href', FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf('main', 'filepath'));
-				selectedElement.setAttribute('filename', dialog.getValueOf('main', 'filepath'));
+				selectedElement.setAttribute('href', dialog.getValueOf('main', 'filepath'));
 			}
 			else {
 				var range = selection.getRanges(1)[0];
@@ -71,8 +78,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 				}
 				
 				attributes = {
-					'href': FileExplorer.resources['Documents'].dir + '/' + dialog.getValueOf('main', 'filepath'),
-					'filename': dialog.getValueOf('main', 'filepath'),
+					'href': dialog.getValueOf('main', 'filepath'),
 					'role': 'res-link',
 				};
 				var style = new CKEDITOR.style({ element: 'a', attributes: attributes });

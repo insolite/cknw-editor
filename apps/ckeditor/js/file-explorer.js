@@ -179,8 +179,10 @@ var FileExplorer = {
             }
     	});
     },
-    readDir: function (dir) {
+    readDir: function (dir, subDir) {
     	var self = this;
+    	
+    	dir += '/' + subDir;
     	
     	var files = self.fs.readdirSync(dir);
     	
@@ -190,7 +192,8 @@ var FileExplorer = {
 	        //var filepath = self.path.join(dir, files[i]);
 	        var filepath = dir + '/' + files[i];
 	        var fileObj = self.mime.stat(filepath);
-	        fileObj['rel-path'] = files[i];
+	        fileObj['filename'] = files[i];
+	        fileObj['dir'] = subDir;
 	        if (self.fs.lstatSync(filepath).isDirectory()) {
 	        	fileObj['gen-type'] = 'folder';
 	        	//fileObj['children'] = self.readDir(filepath);
@@ -216,7 +219,7 @@ var FileExplorer = {
 		$(infoElement).each(function (e) {
 			self.resources[$(this).attr('name')] = {
 				'dir': $(this).attr('path'),
-				'files': self.readDir(self.rootDir + '/' + $(this).attr('path')),
+				'files': self.readDir(self.rootDir, $(this).attr('path')),
 			};
 		});
 		//In current tmp dir create symlinks to resources in rootDir

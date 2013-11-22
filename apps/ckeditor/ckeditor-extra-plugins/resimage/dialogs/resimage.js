@@ -1,41 +1,29 @@
 CKEDITOR.dialog.add('resimageDialog', function (editor) {
-	var items = [];
-	for (var i in FileExplorer.resources['Images'].files) {
-		file = FileExplorer.resources['Images'].files[i];
-		if (file['gen-type'] == 'file') {
-			items.push([file['name'], file['rel-path']]);
-		}
-	}
-	
-	var resourceExists = function (container, name) {
-		for (var i in container) {
-			if (container[i][1] == name) {
-				return true;
+	var items = {};
+	var sources = [
+		FileExplorer.resources['Images'],
+		FileExplorer.resources['Vector Images'],
+	];
+	$.each(sources, function (index, source) {
+		$.each(source.files, function (index, file) {
+			if (file['gen-type'] == 'file') {
+				items[file['dir'] + '/' + file['name']] = {
+					'filename': file['filename'],
+					'dir': file['dir'],
+				};
 			}
-		}
-		return false;
-	};
+		});
+	});
+	
+	itemsList = [];
+	$.each(items, function (index, item) {
+		itemsList.push([item['filename'], item['dir'] + '/' + item['filename']]);
+	});
 	
 	return {
 		title : 'Image Properties',
 		minWidth : 400,
 		minHeight : 200,
- 		
- 		onShow: function () {
- 			var selection = editor.getSelection();
-			var element = selection.getSelectedElement() || selection.getStartElement();
-			if (element) {
-				var name = element.getAttribute('filename');
-				var dialog = this;
-				var selectElement = dialog.getContentElement('main', 'filepath');
-				if (resourceExists(items, name)) {
-					selectElement.setValue(name);
-				}
-				else {
-					selectElement.setValue(items[0][1]);
-				}
-			}
- 		},
  		
 		contents :
 		[
@@ -48,12 +36,12 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 						type : 'select',
 						id : 'filepath',
 						label : 'Image',
-						items: items,
-						'default': items[0][1],
+						items: itemsList,
+						'default': itemsList[0][1],
 						onChange: function () {
 							var dialog = this.getDialog();
 							var previewElement = dialog.getContentElement('main', 'preview').getElement();
-							var imgPath = FileExplorer.resources['Images'].dir + '/' + this.getValue();
+							var imgPath = this.getValue();
 							previewElement.setAttribute("src", imgPath);
 						},
 					},
@@ -67,6 +55,22 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 			}
 		],
 		
+ 		onShow: function () {
+ 			var selection = editor.getSelection();
+			var element = selection.getSelectedElement() || selection.getStartElement();
+			if (element) {
+				var src = element.getAttribute('src');
+				var dialog = this;
+				var selectElement = dialog.getContentElement('main', 'filepath');
+				if (items.hasOwnProperty(src)) {
+					selectElement.setValue(src);
+				}
+				else {
+					selectElement.setValue(itemsList[0][1]);
+				}
+			}
+ 		},
+ 		
 		onOk: function() {
 			editor.fire('saveSnapshot');
 			var dialog = this;
@@ -75,8 +79,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 			if (selectedElement && selectedElement.getName() == 'img') {
 				selectedElement.$.removeAttribute('data-cke-saved-src'); //src won't assign without it
 				var filename = dialog.getValueOf('main', 'filepath');
-				selectedElement.setAttribute('filename', filename);
-				selectedElement.setAttribute('src', FileExplorer.resources['Images'].dir + '/' + filename);
+				selectedElement.setAttribute('src', filename);
 			}
 			else {
 				var range = selection.getRanges(1)[0];
@@ -89,8 +92,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 				
 				var filename = dialog.getValueOf('main', 'filepath');
 				attributes = {
-					'filename': filename,
-					'src': FileExplorer.resources['Images'].dir + '/' + filename,
+					'src': filename,
 					'role': 'res-image',
 				};
 				var style = new CKEDITOR.style({ element: 'img', attributes: attributes });

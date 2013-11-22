@@ -29,8 +29,9 @@
 +use external dropdown menu
 +numbering in dropdown menu for tags
 +show numbering level on element
++possibility for insertion of "./blanks" "./svg"
 -load requested editors (on loading cross-document anchors)
--possibility for insertion of "./blanks" "./svg"
+-pdf preview
 -file creation
 -fix showing opened file with white screen (floating bug)
 

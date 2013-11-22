@@ -89,6 +89,7 @@ CKEDITOR.plugins.add('tagmoving', {
 	tagOptions: {
 		'*': [
 			{
+				type: 'element',
 				label: 'Delete',
 				click: function (element) {
 					element.remove();
@@ -108,6 +109,7 @@ CKEDITOR.plugins.add('tagmoving', {
 		],
 		'p': [
 			{
+				type: 'element',
 				label: 'Make bold',
 				click: function (element) {
 					var html = element.getHtml();
@@ -117,9 +119,66 @@ CKEDITOR.plugins.add('tagmoving', {
 					element.append(sumElement);
 				},
 			},
+			{
+				type: 'container',
+				label: 'Enumerable',
+				children: [
+					{
+						type: 'element',
+						label: 'Clear',
+						click: function (element) {
+							for (var i = 1; i <= 3; i++) {
+								element.removeClass('enumerable-' + i);
+							}
+						},
+					},
+					{
+						type: 'container',
+						label: 'Test',
+						children: [
+							{
+								type: 'element',
+								label: 'test 2',
+								click: function (element) {
+									element.addClass('enumerable-2');
+								},
+							},
+							{
+								type: 'element',
+								label: 'test 3',
+								click: function (element) {
+									element.addClass('enumerable-3');
+								},
+							},
+						],
+					},
+					{
+						type: 'element',
+						label: 'Level 1',
+						click: function (element) {
+							element.addClass('enumerable-1');
+						},
+					},
+					{
+						type: 'element',
+						label: 'Level 2',
+						click: function (element) {
+							element.addClass('enumerable-2');
+						},
+					},
+					{
+						type: 'element',
+						label: 'Level 3',
+						click: function (element) {
+							element.addClass('enumerable-3');
+						},
+					},
+				],
+			},
 		],
 		'a': [
 			{
+				type: 'element',
 				label: 'Make italic',
 				click: function (element) {
 					var html = element.getHtml();
@@ -131,58 +190,96 @@ CKEDITOR.plugins.add('tagmoving', {
 			},
 		],
 	},
+	getDropdownElements: function (elementsInfo, selectedElement, editor) {
+		var self = this;
+		var elements = [];
+		$.each(elementsInfo, function (index, elementInfo) {
+			var element = new CKEDITOR.dom.element('li');
+			var p = new CKEDITOR.dom.element('p');
+			p.setHtml(elementInfo.label);
+			if (elementInfo.type == 'element') {
+				p.on('click', function (e) {
+					elementInfo.click(selectedElement);
+					editor.focus();
+					self.resetCurrentElement(editor);
+				});
+			}
+			element.append(p);
+			elements.push(element);
+			if (elementInfo.type == 'container') {
+				var ul = new CKEDITOR.dom.element('ul');
+				element.append(ul);
+				ul.addClass('drop');
+				var subElements = self.getDropdownElements(elementInfo.children, selectedElement, editor);
+				$.each(subElements, function (index, subElement) {
+					ul.append(subElement);
+				});
+			}
+		});
+		return elements;
+	},
+	getElementPathMenu: function (htmlElement, editor) {
+		var self = this;
+		var menu = new CKEDITOR.dom.element('ul');
+		menu.setAttribute('id', 'menu');
+		var elementPath = self.getPath(htmlElement);
+		wrappedOptions = [];
+		$.each(elementPath, function (index, element) {
+			var elementName = element.getName();
+			var options = self.tagOptions['*'];
+			if (self.tagOptions[elementName]) {
+				options = options.concat(self.tagOptions[elementName]);
+			}
+			if (options) {
+				wrappedOptions.push({
+					type: 'container',
+					label: elementName,
+					children: options,
+				});
+				var menuElements = self.getDropdownElements(wrappedOptions, htmlElement, editor);
+				$.each(menuElements, function (index, menuElement) {
+					menu.append(menuElement);
+				});
+				var elements = menu.find('li');
+				for (var i = 0; i < elements.count(); i++) { //So boring...
+					li = elements.getItem(i);
+					li.on('mouseenter', function (e) {
+						var subMenu = this.findOne('> ul');
+						if (subMenu){
+							//subMenu.show(); //is not working o_0
+							subMenu.setStyle('display', 'block');
+						}
+					});
+					li.on('mouseleave', function (e) {
+						var subMenu = this.findOne('> ul');
+						if (subMenu){
+							//subMenu.hide(); //is not working o_0
+							subMenu.setStyle('display', 'none');
+						}
+					});
+				}
+			}
+		});
+		return menu;
+	},
 	updateElementsPath: function (editor) {
 		var self = this;
-		var elementPath = self.getPath(editor.currentElement);
+		/*
 		var bottom = editor.ui.space('bottom');//.find('#elements-path');
 		if (bottom.find('#elements-path').count() == 0) {
 			bottom.append(new CKEDITOR.dom.element('div').setAttribute('id', 'elements-path'));
 		}
-		bottom = bottom.find('#elements-path').getItem(0);
+		bottom = bottom.findOne('#elements-path');
 		bottom.setHtml('');
+		*/
+		var oldMenu = editor.container.findOne('#menu');
+		if (oldMenu) {
+			oldMenu.remove();
+		}
 		if (editor.currentElement) {
-			html = '';
-			$.each(elementPath, function (index, element) {
-				var tagElement = new CKEDITOR.dom.element('a');
-				tagElement.setAttribute('href', '#');
-				tagElement.setHtml(element.getName());
-				tagElement.on('click', function (e) {
-					var elementName = element.getName();
-					var options = self.tagOptions['*'];
-					if (self.tagOptions[elementName]) {
-						options = options.concat(self.tagOptions[elementName]);
-					}
-					if (options != undefined) {
-						var dropdownMenu = new CKEDITOR.dom.element('div');
-						dropdownMenu.addClass('tag-element-dd');
-						dropdownMenu.on('mouseleave', function (event) {
-							this.remove();
-						});
-						$.each(options, function (index, option) {
-							var ddElement = new CKEDITOR.dom.element('p');
-							//ddElement.setAttribute('href', '#');
-							ddElement.setHtml(option.label);
-							ddElement.on('click', function (e) {
-								option.click(element);
-								editor.focus();
-								self.resetCurrentElement(editor);
-								this.getParent().remove();
-							});
-							dropdownMenu.append(ddElement);
-						});
-						editor.container.append(dropdownMenu);
-						var cPos = editor.container.getDocumentPosition();
-						var pX = e.data.$.pageX - cPos.x - 16;
-						var pY = e.data.$.pageY - cPos.y - dropdownMenu.getSize('height') + 20;
-						dropdownMenu.setStyle('left', pX + 'px');
-						dropdownMenu.setStyle('top', pY + 'px');
-					}
-					e.cancel();
-				});
-				//else unknown tag, or no options for tag
-				bottom.append(tagElement);
-				bottom.appendHtml('&nbsp;&nbsp;');
-			});
+			var menu = self.getElementPathMenu(editor.currentElement, editor);
+			//bottom.append(menu);
+			editor.container.append(menu);
 		}
 	},
 	

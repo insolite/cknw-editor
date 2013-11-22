@@ -4,7 +4,7 @@ var FileExplorer = {
     mime: require('mime'),
     gui: require('nw.gui'),
     fs: require('fs'),
-    editorHeightOffset: 50,
+    editorHeightOffset: 64,
     rootDir: undefined,
     publicationDir: undefined,
     currentFilepath: undefined,
@@ -63,7 +63,12 @@ var FileExplorer = {
 			on: {
 				// maximize the editor's height on startup
 				'instanceReady' : function( evt ) {
-					evt.editor.resize("100%", $(document).height() - self.editorHeightOffset); //$(editorId).clientHeight
+					var height = $(document).height() - self.editorHeightOffset;
+					var menu = evt.editor.container.findOne('#menu');
+					if (menu) {
+						height -= 28;
+					}
+					evt.editor.resize("100%", height); //$(editorId).clientHeight
 				},
 			}
 		});

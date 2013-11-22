@@ -56,7 +56,7 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
 				var page = $('#sidebar-left').find('ul > li > a.current').parent().attr('path');
 				//link.$.removeAttribute('data-cke-saved-href'); //href won't assign without it
 				link.setAttribute('href', page + '#' + element.getAttribute('name'));
-				link.removeAttribute('prepared-link');
+				link.removeAttribute('role');
 				link.removeAttribute('id');
 			}
 		},

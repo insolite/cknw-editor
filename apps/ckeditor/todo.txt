@@ -25,13 +25,13 @@
 +dropdown menu with individual options for tags in tagmoving path
 +editor styles
 +make tagmoving work for widgets (widgets removed for 'dl', okay)
++replace class with role for <a>
 -load requested editors (on loading cross-document anchors)
--replace class with role for <a>
 -use external dropdown menu
--fix showing opened file with white screen (floating bug)
 -numbering in dropdown menu for tags
 -possibility for insertion of "./blanks" "./svg"
 -file creation
+-fix showing opened file with white screen (floating bug)
 
 	TBD
 -publication templates

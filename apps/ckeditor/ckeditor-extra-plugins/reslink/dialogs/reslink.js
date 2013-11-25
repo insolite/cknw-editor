@@ -24,8 +24,6 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 		title : 'Link Properties',
 		minWidth : 400,
 		minHeight : 200,
-		maxWidth : 500,
-		maxHeight : 300,
  		
 		contents :
 		[

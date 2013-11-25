@@ -18,7 +18,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="tab" select="0"/>
 	<xsl:param name="margin" select="0"/>
 	<xsl:param name="icon" select="file"/>
-	<li style="margin-left:{$margin}px">
+	<xsl:param name="parent" select="root"/>
+	<li style="margin-left:{$margin}px" parent="{$parent}">
 		<xsl:attribute name="path">
 			<xsl:value-of select="./@path" />
 		</xsl:attribute>
@@ -45,12 +46,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:with-param name="tab" select="0"/>
 			<xsl:with-param name="margin" select="0"/>
 			<xsl:with-param name="icon" select='"folder-open"'/>
+			<xsl:with-param name="parent" select='"root"'/>
 		</xsl:call-template>
 		<xsl:for-each select="./page">
 			<xsl:call-template name="page">
 				<xsl:with-param name="tab" select="1"/>
 				<xsl:with-param name="margin" select="12"/>
 				<xsl:with-param name="icon" select='"file"'/>
+				<xsl:with-param name="parent" select="./../@name"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:for-each>
@@ -59,6 +62,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:with-param name="tab" select="0"/>
 			<xsl:with-param name="margin" select="0"/>
 			<xsl:with-param name="icon" select='"file"'/>
+			<xsl:with-param name="parent" select='"root"'/>
 		</xsl:call-template>
 	</xsl:for-each>
 	</ul>

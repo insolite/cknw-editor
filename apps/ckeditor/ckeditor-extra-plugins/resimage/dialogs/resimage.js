@@ -24,8 +24,6 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 		title : 'Image Properties',
 		minWidth : 400,
 		minHeight : 200,
-		maxWidth : 500,
-		maxHeight : 300,
  		
 		contents :
 		[

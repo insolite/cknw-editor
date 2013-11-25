@@ -35,6 +35,7 @@
 -file creation
 -fix showing opened file with white screen (floating bug)
 -set max size for dialogs
+groupping/ungroupping
 
 	TBD
 -publication templates

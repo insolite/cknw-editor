@@ -85,11 +85,103 @@ var FileExplorer = {
 		editor['userdata'] = {};
 		editor.userdata['loadedModes'] = loadedModes;
     },
-    create: function (filepath, filedata) {
-    	//self.files
-    	//TODO: implement
-        //var self = this;
-        //self.currentFilepath = filepath;
+    updateStructure: function (callback) {
+    	var self = this;
+    	
+    	xml = self.readFile(self.PLAN_FILENAME, function (filedata) {
+    		xmlDoc = $.parseXML(filedata);
+        	xmlNode = $(xmlDoc).find('wymprj');
+        	xmlNode.find('group,page').each(function (index, element) {
+        		$(this).remove();
+        	});
+        	$('#sidebar-left li[path=""]').each(function (index, element) {
+        		var groupElement = $('<group></group>')
+    			.attr({
+    				'name': $(this).find('> a.filelabel').text(),
+    			});
+    			$('#sidebar-left li[parent="' + $(this).find('> a.filelabel').text() + '"]').each(function (index, element) {
+    				groupElement.append($('<page/>')
+		    			.attr({
+		    				'path': $(this).attr('path'),
+		    				'name': $(this).find('> a.filelabel').text(),
+		    				'modes': $(this).attr('modes'),
+		    			})
+	    			);
+    			});
+        		xmlNode.append(groupElement);
+        	});
+        	$('#sidebar-left li[path!=""][parent="root"]').each(function (index, element) {
+				xmlNode.append($('<page/>')
+	    			.attr({
+	    				'path': $(this).attr('path'),
+	    				'name': $(this).find('> a.filelabel').text(),
+	    				'modes': $(this).attr('modes') || 'default',
+	    			})
+    			);
+			});
+        	console.log((new XMLSerializer()).serializeToString(xmlDoc));
+        	var xmlText = (new XMLSerializer()).serializeToString(xmlDoc);
+        	//Remove stupid automatic insertions in group, page tags
+        	xmlText = xmlText.split('xmlns="http://www.w3.org/1999/xhtml" ').join('');
+        	//Remove stupid automatic convertion of <page/> to <page></page>
+        	xmlText = xmlText.split('></page>').join('/>');
+        	xmlText = xmlText.split('><').join('>\n<');
+        	self.writeFile(self.PLAN_FILENAME, xmlText, callback);
+        });
+    },
+    create: function (filepath, name, group, modes, filedata) {
+    	var self = this;
+    	
+    	filepath = filepath || 'unnamed.html';
+    	name = name || 'unnamed';
+    	group = group || 'root';
+    	modes = modes || 'default';
+    	filedata = filedata || '';
+    	
+        self.writeFile(filepath, filedata, function () {
+	    	var fileElement = $('<li></li>')
+			.attr({
+				'path': filepath,
+				'parent': group,
+				'modes': modes,
+			})
+			.css({
+				'margin-left': '0px',
+			})
+			.click(function (e) {
+				$('#sidebar-left > a.filelabel').removeClass('current');
+				$(this).find('> a.filelabel').addClass('current opened');
+				$(this).find('> div.close').show();
+				self.open($(this).attr('path'));
+				e.preventDefault();
+			})
+			.append($('<a></a>')
+				.attr({
+					'href': '#',
+				})
+				.addClass('filelabel')
+				.append($('<i></i>')
+					.addClass('icon-file')
+				)
+				.append(name)
+			)
+			.append($('<div></div>')
+				.addClass('close')
+				.html('x')
+				.click(function (e) {
+					var li = $(this).parent();
+					var filepath = li.attr('path');
+					li.find('> a.filelabel').removeClass('current opened');
+					$(this).hide();
+					self.close(filepath);
+					e.stopPropagation();
+				})
+			);
+			$('#sidebar-left > ul').append(fileElement);
+			self.updateStructure(function () {
+				fileElement.click();
+			});
+		});
     },
     open: function(filepath) {
         var self = this;
@@ -184,6 +276,17 @@ var FileExplorer = {
             }
     	});
     },
+    writeFile: function (filepath, filedata, callback) {
+    	var self = this;
+    	self.fs.writeFile(self.rootDir + '/' + filepath, filedata, function (err) {
+            if (err) {
+                throw err;
+            }
+            else {
+            	callback();
+            }
+    	});
+    },
     readDir: function (dir, subDir) {
     	var self = this;
     	
@@ -236,9 +339,69 @@ var FileExplorer = {
         	});
 		});
     },
+    /*
+    getFileStructure: function (node) {
+    	var self = this;
+    	var container = $('<ul></ul>');
+    	var elements = [];
+    	var groupName = node.attr('name') || 'Files';
+    	elements.push($('<li></li>')
+			.html(groupName)
+		);
+    	node.find('group').each(function (index, element) {
+    		var name = $(this).attr('name');
+    		elements.push($('<li></li>')
+    			.html(name)
+    			.append(self.getFileStructure($(this)))
+    		);
+    	});
+    	node.find('page').each(function (index, element) {
+    		var path = $(this).attr('path');
+    		var name = $(this).attr('name');
+    		var modes = $(this).attr('modes');
+    		self.files[path] = {
+    			'path': path,
+    			'name': name,
+    			'parent': groupName,
+    			'modes': modes,
+    		};
+    		elements.push($('<li></li>')
+    			.attr({
+    				'path': path,
+    			})
+    			.html(name)
+    			.click(function (e) {
+					$('#sidebar-left > a.filelabel').removeClass('current');
+					$(this).find('> a.filelabel').addClass('current opened');
+					$(this).find('> div.close').show();
+					self.open($(this).attr('path'));
+					e.preventDefault();
+				})
+    			.append($('<a></a>')
+    				.attr({
+    					'href': '#',
+    				})
+    				.addClass('filelabel')
+    				.append($('<i></i>')
+    					.addClass('icon-file')
+    				)
+    				.append(name)
+    			)
+    		);
+    	});
+    	return container.append(elements);
+    },
+    */
     initSidebar: function () {
         var self = this;
+        /*
         self.files = {};
+        xml = self.readFile(self.PLAN_FILENAME, function (filedata) {
+        	xml = $($.parseXML(filedata));
+        	//xml.find('');
+        	$('#sidebar-left').append(self.getFileStructure(xml));
+        });
+        */
 		$('#sidebar-left').append(Xslt.getResult(self.PLAN_FILENAME, "xsl/pages.xsl"));
 		$('#sidebar-left > ul > li[path!=""]').each(function () {
 			//self.files[$(this).attr('path')];

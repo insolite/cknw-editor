@@ -3,8 +3,6 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
 		title : 'Link Selection',
 		minWidth : 400,
 		minHeight : 200,
-		maxWidth : 500,
-		maxHeight : 300,
  		
 		contents :
 		[

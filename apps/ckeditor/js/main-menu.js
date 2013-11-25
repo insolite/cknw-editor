@@ -5,7 +5,7 @@ var MainMenu = {
 	            'tooltip': 'Create new file',
 	            'icon': 'file',
 	            onclick: function (event) {
-	                FileExplorer.create(undefined, '');
+	            	$('#file-create-dialog').dialog("open");
 	            }
 	        },
 	        'save': {

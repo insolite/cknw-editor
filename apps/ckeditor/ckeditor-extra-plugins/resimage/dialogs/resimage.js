@@ -38,6 +38,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 						label : 'Image',
 						items: itemsList,
 						'default': itemsList[0][1],
+						className: 'dialog-limited',
 						onChange: function () {
 							var dialog = this.getDialog();
 							var previewElement = dialog.getContentElement('main', 'preview').getElement();

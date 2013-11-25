@@ -2,6 +2,8 @@
 	.tag-element-dd > p { text-decoration: none; margin: 0; padding: 4px 8px 4px 8px; color: #000; cursor: default; } 
 	.tag-element-dd > p:hover { background-color: #e7efe7; }
 
+select.dialog-limited { max-width: 500px; }
+
 ul#menu
 {
     margin:0;

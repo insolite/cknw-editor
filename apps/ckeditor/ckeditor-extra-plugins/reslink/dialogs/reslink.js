@@ -38,6 +38,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 						label : 'Document',
 						items: itemsList,
 						'default': itemsList[0][1],
+						className: 'dialog-limited',
 					},
 					{
 						type : 'button',

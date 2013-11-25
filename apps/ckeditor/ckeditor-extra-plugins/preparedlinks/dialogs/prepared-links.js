@@ -17,6 +17,7 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
 						label : 'Prepared link',
 						items: [],
 						//'default': items[0][1],
+						className: 'dialog-limited',
 					},
 				]
 			}
@@ -34,8 +35,7 @@ CKEDITOR.dialog.add('preparedLinksDialog', function (editor) {
 				var links = openedEditor.document.find('a[role="prepared-link"]');
 				for (var i = 0; i < links.count(); i++) {
 					link = links.getItem(i);
-					//console.log(filepath + '#' + link.getAttribute('id'));
-					selectElement.add(link.getText(), filepath + '#' + link.getAttribute('id')); //TODO: print filepath
+					selectElement.add($(this).text() + ': "' + link.getText() + '"', filepath + '#' + link.getAttribute('id'));
 				}
 			});
  		},

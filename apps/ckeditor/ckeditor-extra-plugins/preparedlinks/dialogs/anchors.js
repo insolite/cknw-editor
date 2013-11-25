@@ -25,6 +25,7 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 						id : 'document',
 						label : 'Document',
 						items: [],
+						className: 'dialog-limited',
 						onChange: function () {
 							var dialog = this.getDialog();
 							
@@ -53,6 +54,7 @@ CKEDITOR.dialog.add('anchorsDialog', function (editor) {
 						id : 'anchor',
 						label : 'Anchor',
 						items: [],
+						className: 'dialog-limited',
 					},
 				]
 			}

@@ -31,9 +31,9 @@
 +show numbering level on element
 +possibility for insertion of "./blanks" "./svg"
 +file creation
--set max size for dialogs
--groupping/ungroupping
++set max size for dialogs
 -select elements in #file-create-dialog
+-initial window size
 -fix showing opened file with white screen (floating bug)
 
 	TBD
@@ -46,10 +46,11 @@
 -spellchecker (offline)
 
 	optional
--disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
+-groupping/ungroupping
 
 	cancelled
 how would be defined plugins removal
+disable extra div wrapping (appears in abbr widgets, also phantom span tag appears somewhere)
 
 	final
 -clean markup for source documents

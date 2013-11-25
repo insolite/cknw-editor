@@ -11,7 +11,6 @@ var FileExplorer = {
     nextId: 1,
     editors: {},
     resources: {},
-    files: {},
     PLAN_FILENAME: 'plan.wprj',
     getEditorByFilepath: function (filepath) {
     	var textarea = $('#workspace > textarea[filepath="' + filepath + '"]');
@@ -125,6 +124,7 @@ var FileExplorer = {
         	//Remove stupid automatic convertion of <page/> to <page></page>
         	xmlText = xmlText.split('></page>').join('/>');
         	xmlText = xmlText.split('><').join('>\n<');
+        	xmlText = xmlText.replace(/\n{2,}/g, '\n');
         	self.writeFile(self.PLAN_FILENAME, xmlText, callback);
         });
     },
@@ -344,69 +344,9 @@ var FileExplorer = {
         	});
 		});
     },
-    /*
-    getFileStructure: function (node) {
-    	var self = this;
-    	var container = $('<ul></ul>');
-    	var elements = [];
-    	var groupName = node.attr('name') || 'Files';
-    	elements.push($('<li></li>')
-			.html(groupName)
-		);
-    	node.find('group').each(function (index, element) {
-    		var name = $(this).attr('name');
-    		elements.push($('<li></li>')
-    			.html(name)
-    			.append(self.getFileStructure($(this)))
-    		);
-    	});
-    	node.find('page').each(function (index, element) {
-    		var path = $(this).attr('path');
-    		var name = $(this).attr('name');
-    		var modes = $(this).attr('modes');
-    		self.files[path] = {
-    			'path': path,
-    			'name': name,
-    			'parent': groupName,
-    			'modes': modes,
-    		};
-    		elements.push($('<li></li>')
-    			.attr({
-    				'path': path,
-    			})
-    			.html(name)
-    			.click(function (e) {
-					$('#sidebar-left > a.filelabel').removeClass('current');
-					$(this).find('> a.filelabel').addClass('current opened');
-					$(this).find('> div.close').show();
-					self.open($(this).attr('path'));
-					e.preventDefault();
-				})
-    			.append($('<a></a>')
-    				.attr({
-    					'href': '#',
-    				})
-    				.addClass('filelabel')
-    				.append($('<i></i>')
-    					.addClass('icon-file')
-    				)
-    				.append(name)
-    			)
-    		);
-    	});
-    	return container.append(elements);
-    },
-    */
     initSidebar: function () {
         var self = this;
-        /*
-        self.files = {};
-        xml = self.readFile(self.PLAN_FILENAME, function (filedata) {
-        	xml = $($.parseXML(filedata));
-        	//xml.find('');
-        	$('#sidebar-left').append(self.getFileStructure(xml));
-        });
-        */
+        
 		$('#sidebar-left').append(Xslt.getResult(self.PLAN_FILENAME, "xsl/pages.xsl"));
 		$('#sidebar-left > ul > li[path!=""]').each(function () {
 			//self.files[$(this).attr('path')];

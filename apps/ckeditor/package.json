@@ -1,4 +1,16 @@
 {
     "name": "docedit",
-    "main": "index.html"
+    "main": "index.html",
+    "description": "node-webkit + CKEditor based WYSIWYG specialized text editor",
+    "window": {
+        "title": "node-webkit demo",
+        "icon": "link.png",
+        "toolbar": false,
+        "frame": true,
+        "width": 800,
+        "height": 600,
+        "position": "mouse",
+        "min_width": 400,
+        "min_height": 200
+    }
 }

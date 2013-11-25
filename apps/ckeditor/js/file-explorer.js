@@ -119,7 +119,6 @@ var FileExplorer = {
 	    			})
     			);
 			});
-        	console.log((new XMLSerializer()).serializeToString(xmlDoc));
         	var xmlText = (new XMLSerializer()).serializeToString(xmlDoc);
         	//Remove stupid automatic insertions in group, page tags
         	xmlText = xmlText.split('xmlns="http://www.w3.org/1999/xhtml" ').join('');
@@ -177,7 +176,13 @@ var FileExplorer = {
 					e.stopPropagation();
 				})
 			);
-			$('#sidebar-left > ul').append(fileElement);
+			if (group == 'root') {
+				$('#sidebar-left > ul').append(fileElement);
+			}
+			else {
+				fileElement.css('margin-left', '12px');
+				$('#sidebar-left > ul > li[parent="' + group + '"]').last().after(fileElement);
+			}
 			self.updateStructure(function () {
 				fileElement.click();
 			});

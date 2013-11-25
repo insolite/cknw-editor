@@ -30,18 +30,18 @@
 +numbering in dropdown menu for tags
 +show numbering level on element
 +possibility for insertion of "./blanks" "./svg"
--load requested editors (on loading cross-document anchors)
--pdf preview (use pdf.js instead of link)
--file creation
--fix showing opened file with white screen (floating bug)
++file creation
 -set max size for dialogs
-groupping/ungroupping
+-groupping/ungroupping
+-select elements in #file-create-dialog
+-fix showing opened file with white screen (floating bug)
 
 	TBD
 -publication templates
 -remove unnecessary features (specialized editor (modes))
 
 	delayed
+-pdf preview (use pdf.js instead of link)
 -validation, limited input
 -spellchecker (offline)
 
@@ -61,3 +61,4 @@ additional files:
 
 	questions
 spellchecker
+load requested editors (on loading cross-document anchors)

@@ -12,6 +12,14 @@ var FileExplorer = {
     editors: {},
     resources: {},
     PLAN_FILENAME: 'plan.wprj',
+    availableModes: [
+		'abbr',
+		'reslink',
+		'preparedlinks',
+		'resimage',
+		'tagmoving',
+		'enumerating',
+	],
     getEditorByFilepath: function (filepath) {
     	var textarea = $('#workspace > textarea[filepath="' + filepath + '"]');
 		return CKEDITOR.instances[textarea.attr('id')];
@@ -41,15 +49,8 @@ var FileExplorer = {
 		//TODO: default mode as plugin
 		//TODO: common mode
 		var loadedModes;
-		if (modeNamesString == '' || modeNamesString == 'default') {
-			loadedModes = [
-				'abbr',
-				'reslink',
-				'preparedlinks',
-				'resimage',
-				'tagmoving',
-				'enumerating',
-			];
+		if (modeNamesString == 'default') {
+			loadedModes = self.availableModes;
 		} else {
 			loadedModes = modeNamesString.split(',');
 		}
@@ -134,7 +135,7 @@ var FileExplorer = {
     	filepath = filepath || 'unnamed.html';
     	name = name || 'unnamed';
     	group = group || 'root';
-    	modes = modes || 'default';
+    	modes = modes || ['default'];
     	filedata = filedata || '';
     	
         self.writeFile(filepath, filedata, function () {
@@ -142,13 +143,13 @@ var FileExplorer = {
 			.attr({
 				'path': filepath,
 				'parent': group,
-				'modes': modes,
+				'modes': modes.join(','),
 			})
 			.css({
 				'margin-left': '0px',
 			})
 			.click(function (e) {
-				$('#sidebar-left > a.filelabel').removeClass('current');
+				$('#sidebar-left > ul > li > a.filelabel').removeClass('current');
 				$(this).find('> a.filelabel').addClass('current opened');
 				$(this).find('> div.close').show();
 				self.open($(this).attr('path'));

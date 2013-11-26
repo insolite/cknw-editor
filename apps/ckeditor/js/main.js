@@ -1,6 +1,6 @@
 $(window).ready(function () {
 	MainMenu.init();
-	FileExplorer.init();
+	FileExplorer.init(location.hash.slice(1));
 	
 	$(window).resize(function () {
 		//editor.maximizeHeightNow(); //is not working correctly

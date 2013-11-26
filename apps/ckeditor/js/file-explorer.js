@@ -393,10 +393,10 @@ var FileExplorer = {
 			}
 		}
 	},
-    init: function() {
+    init: function(rootDir) {
         var self = this;
         
-        self.rootDir = self.gui.App.argv[0] || process.cwd();
+        self.rootDir = rootDir || process.cwd();
         self.publicationDir = self.rootDir + '/output'; //TODO: argv possibility
         
     	//In current tmp dir create symlink to the plan.wprj for xslt conversion

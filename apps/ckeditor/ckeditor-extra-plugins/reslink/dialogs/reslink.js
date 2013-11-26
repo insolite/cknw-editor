@@ -7,7 +7,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 	$.each(sources, function (index, source) {
 		$.each(source.files, function (index, file) {
 			if (file['gen-type'] == 'file') {
-				items[file['dir'] + '/' + file['name']] = {
+				items[self.path.join(file['dir'], file['name'])] = {
 					'filename': file['filename'],
 					'dir': file['dir'],
 				};
@@ -17,7 +17,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 	
 	itemsList = [];
 	$.each(items, function (index, item) {
-		itemsList.push([item['filename'], item['dir'] + '/' + item['filename']]);
+		itemsList.push([self.path.join(item['filename'], item['dir'], item['filename'])]);
 	});
 	
 	return {
@@ -52,7 +52,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 							var dialog = this.getDialog();
 							var spawn = require('child_process').spawn;
 							var viewer = '';
-							var pdf = spawn(viever, [process.cwd() + '/' + dialog.getContentElement('main', 'filepath').getValue()]);
+							var pdf = spawn(viever, [self.path.join(process.cwd(), dialog.getContentElement('main', 'filepath').getValue())]);
 						
 							ls.stdout.on('data', function (data) {
 								console.log('stdout: ' + data);

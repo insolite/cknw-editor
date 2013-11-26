@@ -7,7 +7,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 	$.each(sources, function (index, source) {
 		$.each(source.files, function (index, file) {
 			if (file['gen-type'] == 'file') {
-				items[file['dir'] + '/' + file['name']] = {
+				items[self.path.join(file['dir'], file['name'])] = {
 					'filename': file['filename'],
 					'dir': file['dir'],
 				};
@@ -17,7 +17,7 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 	
 	itemsList = [];
 	$.each(items, function (index, item) {
-		itemsList.push([item['filename'], item['dir'] + '/' + item['filename']]);
+		itemsList.push([item['filename'], self.path.join(item['dir'], item['filename'])]);
 	});
 	
 	return {

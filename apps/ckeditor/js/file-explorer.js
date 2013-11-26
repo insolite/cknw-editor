@@ -220,7 +220,7 @@ var FileExplorer = {
     },
     save: function (filepath, data) {
         var self = this;
-        filepath = filepath || (self.rootDir + '/' + self.currentFilepath);
+        filepath = filepath || self.path.join(self.rootDir, self.currentFilepath);
         var text = data || self.getCurrentEditor().getData();
         if (filepath) {
             self.fs.writeFile(filepath, text, function (err) {
@@ -262,18 +262,18 @@ var FileExplorer = {
 	    		title: $('#sidebar-left > ul > li[path="' + filepath + '"] > a')[0].childNodes[1].data,
 	    		content: html,
 	    	});
-	    	self.save(self.publicationDir + '/' + filepath, fullHtml);
+	    	self.save(self.path.join(self.publicationDir, filepath), fullHtml);
     	});
     	//TODO: copy resource folders
     	$.each(self.resources, function (name, data) {
-    		//self.rootDir + '/' + data.path
-    		//self.publicationDir + '/' + data.path
+    		//self.path.join(self.rootDir, data.path)
+    		//self.path.join(self.publicationDir, data.path)
     		//self.fs.createReadStream(data.path).pipe(fs.createWriteStream(data.path));
     	});
     },
     readFile: function (filepath, callback) {
     	var self = this;
-    	self.fs.readFile(self.rootDir + '/' + filepath, function (err, filedata) {
+    	self.fs.readFile(self.path.join(self.rootDir, filepath), function (err, filedata) {
             if (err) {
                 throw err;
             }
@@ -284,7 +284,7 @@ var FileExplorer = {
     },
     writeFile: function (filepath, filedata, callback) {
     	var self = this;
-    	self.fs.writeFile(self.rootDir + '/' + filepath, filedata, function (err) {
+    	self.fs.writeFile(self.path.join(self.rootDir, filepath), filedata, function (err) {
             if (err) {
                 throw err;
             }
@@ -296,7 +296,7 @@ var FileExplorer = {
     readDir: function (dir, subDir) {
     	var self = this;
     	
-    	dir += '/' + subDir;
+    	dir = self.path.join(dir, subDir);
     	
     	var files = self.fs.readdirSync(dir);
     	
@@ -304,7 +304,7 @@ var FileExplorer = {
 	    var nondirs = [];
 	    for (var i = 0; i < files.length; ++i) {
 	        //var filepath = self.path.join(dir, files[i]);
-	        var filepath = dir + '/' + files[i];
+	        var filepath = self.path.join(dir, files[i]);
 	        var fileObj = self.mime.stat(filepath);
 	        fileObj['filename'] = files[i];
 	        fileObj['dir'] = subDir;
@@ -340,8 +340,8 @@ var FileExplorer = {
 		//(provide access to images, documents, etc. while editing, not only after publication)
 		//TODO: predefined empty separate directory for links to resources?
 		$.each(self.resources, function (name, data) {
-			self.fs.symlink(self.rootDir + '/' + data.dir,
-							process.cwd() + '/' + data.dir, 'dir', function () {
+			self.fs.symlink(self.path.join(self.rootDir, data.dir),
+							self.path.join(process.cwd(), data.dir), 'dir', function () {
         	});
 		});
     },
@@ -376,8 +376,8 @@ var FileExplorer = {
         
     	//In current tmp dir create symlink to the plan.wprj for xslt conversion
     	//cause Xslt.getResult is getting xml over http
-		self.fs.symlink(self.rootDir + '/' + self.PLAN_FILENAME,
-						process.cwd() + '/' + self.PLAN_FILENAME, 'file', function () {
+		self.fs.symlink(self.path.join(self.rootDir, self.PLAN_FILENAME),
+						self.path.join(process.cwd(), self.PLAN_FILENAME), 'file', function () {
         });
         
         self.initResources();

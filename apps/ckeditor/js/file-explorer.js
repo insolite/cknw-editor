@@ -368,6 +368,31 @@ var FileExplorer = {
 			e.stopPropagation();
 		});
     },
+    copyFile: function (source, target, cb) {
+    	var self = this;
+    	
+		var cbCalled = false;
+	
+		var rd = self.fs.createReadStream(source);
+		rd.on("error", function(err) {
+			done(err);
+		});
+		var wr = self.fs.createWriteStream(target);
+		wr.on("error", function(err) {
+			done(err);
+		});
+		wr.on("close", function(ex) {
+			done();
+		});
+		rd.pipe(wr);
+	
+		function done(err) {
+			if (!cbCalled) {
+				cb(err);
+				cbCalled = true;
+			}
+		}
+	},
     init: function() {
         var self = this;
         
@@ -376,11 +401,22 @@ var FileExplorer = {
         
     	//In current tmp dir create symlink to the plan.wprj for xslt conversion
     	//cause Xslt.getResult is getting xml over http
+		/*
 		self.fs.symlink(self.path.join(self.rootDir, self.PLAN_FILENAME),
 						self.path.join(process.cwd(), self.PLAN_FILENAME), 'file', function () {
+			self.initResources();
+        	self.initSidebar();
         });
-        
-        self.initResources();
-        self.initSidebar();
+        */
+    	//Blank page appears when opening symlink from local file system on Windows OS
+    	//(probably WebKit bug - "https://bugs.webkit.org/show_bug.cgi?id=124893")
+    	//Symlinks under Windows XP are not supported at all
+    	//So, simply copying file. Sadly...
+    	var srcFilepath = self.path.join(self.rootDir, self.PLAN_FILENAME);
+    	var dstFilepath = self.path.join(process.cwd(), self.PLAN_FILENAME);
+    	self.copyFile(srcFilepath, dstFilepath, function (e) {
+    		self.initResources();
+        	self.initSidebar();
+    	});
     },
 };

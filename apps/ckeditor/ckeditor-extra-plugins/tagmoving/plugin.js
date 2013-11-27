@@ -156,8 +156,8 @@ CKEDITOR.plugins.add('tagmoving', {
 		var menu = new CKEDITOR.dom.element('ul');
 		menu.setAttribute('id', 'menu');
 		var elementPath = self.getPath(htmlElement);
-		wrappedOptions = [];
 		$.each(elementPath, function (index, element) {
+			var wrappedOptions = [];
 			var elementName = element.getName();
 			var options = self.tagOptions['*'];
 			if (self.tagOptions[elementName]) {

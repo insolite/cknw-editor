@@ -36,6 +36,8 @@ zip -9 -r -q "${dir_build_tmp}/${project_name}.nw" ./*
 #Pack application with node-webkit
 cat ${dir_node_webkit}/nw ${dir_build_tmp}/${project_name}.nw > ${dir_build}/${executable}
 chmod +x ${dir_build}/${project_name}
+
+#Copy additional node-webkit files
 cp ${dir_node_webkit}/nw.pak ${dir_build}
 
 #Clean up

@@ -1,5 +1,3 @@
-*.nw
-*.app
 .*.sw[po]
-build/
+build/*
 

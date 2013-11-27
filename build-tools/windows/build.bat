@@ -42,7 +42,10 @@ cd %dir_build_tmp%\%dir_source%
 
 ::Pack application with node-webkit
 copy /b %dir_node_webkit%\nw.exe+%dir_build_tmp%\%project_name%.nw %dir_build%\%executable%
+
+::Copy additional node-webkit files
 copy %dir_node_webkit%\nw.pak %dir_build%
+copy %dir_node_webkit%\icudt.dll %dir_build%
 
 ::Clean up
 rmdir /s /e %dir_build_tmp%

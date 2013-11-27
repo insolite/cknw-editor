@@ -19,19 +19,20 @@ mkdir %dir_build_tmp%
 
 ::Project specific block begin
 
+::TODO: moving instead of link generation
 ::Generate links for new extra ckeditor plugins
 cd %dir_source%\ckeditor\plugins
-for /f %plugin% in ('dir /b %dir_source%\ckeditor-extra-plugins') do (
-	del %plugin%
-	mklink /d %plugin% %dir_source%\ckeditor-extra-plugins\%plugin%
+for /f %%p in ('dir /b %dir_source%\ckeditor-extra-plugins') do (
+	del %%p
+	mklink /d %%p %dir_source%\ckeditor-extra-plugins\%%p
 )
 
 ::Resolve links (required for windows only)
 echo D | xcopy /s /e /q %dir_source% %dir_build_tmp%
 cd %dir_build_tmp%\%dir_source%\ckeditor-extra-plugins
-for /f %plugin% in ('dir /b') do (
-	del %dir_build_tmp%\%dir_source%\ckeditor\plugins\%plugin%
-	move %plugin% %dir_build_tmp%\%dir_source%\ckeditor\plugins
+for /f %%p in ('dir /b') do (
+	del %dir_build_tmp%\%dir_source%\ckeditor\plugins\%%p
+	move %%p %dir_build_tmp%\%dir_source%\ckeditor\plugins
 )
 
 ::Project specific block end

@@ -4,20 +4,17 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 		FileExplorer.resources['Documents'],
 		FileExplorer.resources['Blanks'],
 	];
+	var itemsList = [];
 	$.each(sources, function (index, source) {
 		$.each(source.files, function (index, file) {
 			if (file['gen-type'] == 'file') {
-				items[self.path.join(file['dir'], file['name'])] = {
+				items[FileExplorer.path.join(file['dir'], file['name'])] = {
 					'filename': file['filename'],
 					'dir': file['dir'],
 				};
+				itemsList.push([file['name'], FileExplorer.path.join(file['dir'], file['name'])]);
 			}
 		});
-	});
-	
-	itemsList = [];
-	$.each(items, function (index, item) {
-		itemsList.push([self.path.join(item['filename'], item['dir'], item['filename'])]);
 	});
 	
 	return {
@@ -52,7 +49,7 @@ CKEDITOR.dialog.add('reslinkDialog', function (editor) {
 							var dialog = this.getDialog();
 							var spawn = require('child_process').spawn;
 							var viewer = '';
-							var pdf = spawn(viever, [self.path.join(process.cwd(), dialog.getContentElement('main', 'filepath').getValue())]);
+							var pdf = spawn(viever, [FileExplorer.path.join(process.cwd(), dialog.getContentElement('main', 'filepath').getValue())]);
 						
 							ls.stdout.on('data', function (data) {
 								console.log('stdout: ' + data);

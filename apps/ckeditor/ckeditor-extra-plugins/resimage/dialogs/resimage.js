@@ -4,20 +4,17 @@ CKEDITOR.dialog.add('resimageDialog', function (editor) {
 		FileExplorer.resources['Images'],
 		FileExplorer.resources['Vector Images'],
 	];
+	var itemsList = [];
 	$.each(sources, function (index, source) {
 		$.each(source.files, function (index, file) {
 			if (file['gen-type'] == 'file') {
-				items[self.path.join(file['dir'], file['name'])] = {
+				items[FileExplorer.path.join(file['dir'], file['name'])] = {
 					'filename': file['filename'],
 					'dir': file['dir'],
 				};
+				itemsList.push([file['name'], FileExplorer.path.join(file['dir'], file['name'])]);
 			}
 		});
-	});
-	
-	itemsList = [];
-	$.each(items, function (index, item) {
-		itemsList.push([item['filename'], self.path.join(item['dir'], item['filename'])]);
 	});
 	
 	return {

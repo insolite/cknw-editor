@@ -169,7 +169,7 @@ CKEDITOR.plugins.add('tagmoving', {
 					label: elementName,
 					children: options,
 				});
-				var menuElements = self.getDropdownElements(wrappedOptions, htmlElement, editor);
+				var menuElements = self.getDropdownElements(wrappedOptions, element, editor);
 				$.each(menuElements, function (index, menuElement) {
 					menu.append(menuElement);
 				});

@@ -50,66 +50,68 @@ CKEDITOR.plugins.add('enumerating', {
 		if (!CKEDITOR.plugins.get('tagmoving').tagOptions['p']) {
 			CKEDITOR.plugins.get('tagmoving').tagOptions['p'] = [];
 		}
-		CKEDITOR.plugins.get('tagmoving').tagOptions['p'].push({
-			type: 'container',
-			label: 'Enumerable',
-			children: [
-				{
-					type: 'element',
-					label: 'Clear',
-					click: function (element) {
-						element.removeClass('enumerable');
-						for (var i = 1; i <= 3; i++) {
-							element.removeClass('enumerable-' + i);
-						}
+		if (!CKEDITOR.plugins.get('tagmoving').tagOptions['p'].hasOwnProperty('enumerating')) {
+			CKEDITOR.plugins.get('tagmoving').tagOptions['p']['enumerating'] = {
+				type: 'container',
+				label: 'Enumerable',
+				children: {
+					'enumerating-clear': {
+						type: 'element',
+						label: 'Clear',
+						click: function (element) {
+							element.removeClass('enumerable');
+							for (var i = 1; i <= 3; i++) {
+								element.removeClass('enumerable-' + i);
+							}
+						},
+					},
+					'enumerating-level-1': {
+						type: 'element',
+						label: 'Level 1',
+						click: function (element) {
+							if (element.hasClass('enumerable')) {
+								element.removeClass('enumerable-1');
+								element.removeClass('enumerable-2');
+								element.removeClass('enumerable-3');
+							}
+							else {
+								element.addClass('enumerable');
+							}
+							element.addClass('enumerable-1');
+						},
+					},
+					'enumerating-level-2': {
+						type: 'element',
+						label: 'Level 2',
+						click: function (element) {
+							if (element.hasClass('enumerable')) {
+								element.removeClass('enumerable-1');
+								element.removeClass('enumerable-2');
+								element.removeClass('enumerable-3');
+							}
+							else {
+								element.addClass('enumerable');
+							}
+							element.addClass('enumerable-2');
+						},
+					},
+					'enumerating-level-3': {
+						type: 'element',
+						label: 'Level 3',
+						click: function (element) {
+							if (element.hasClass('enumerable')) {
+								element.removeClass('enumerable-1');
+								element.removeClass('enumerable-2');
+								element.removeClass('enumerable-3');
+							}
+							else {
+								element.addClass('enumerable');
+							}
+							element.addClass('enumerable-3');
+						},
 					},
 				},
-				{
-					type: 'element',
-					label: 'Level 1',
-					click: function (element) {
-						if (element.hasClass('enumerable')) {
-							element.removeClass('enumerable-1');
-							element.removeClass('enumerable-2');
-							element.removeClass('enumerable-3');
-						}
-						else {
-							element.addClass('enumerable');
-						}
-						element.addClass('enumerable-1');
-					},
-				},
-				{
-					type: 'element',
-					label: 'Level 2',
-					click: function (element) {
-						if (element.hasClass('enumerable')) {
-							element.removeClass('enumerable-1');
-							element.removeClass('enumerable-2');
-							element.removeClass('enumerable-3');
-						}
-						else {
-							element.addClass('enumerable');
-						}
-						element.addClass('enumerable-2');
-					},
-				},
-				{
-					type: 'element',
-					label: 'Level 3',
-					click: function (element) {
-						if (element.hasClass('enumerable')) {
-							element.removeClass('enumerable-1');
-							element.removeClass('enumerable-2');
-							element.removeClass('enumerable-3');
-						}
-						else {
-							element.addClass('enumerable');
-						}
-						element.addClass('enumerable-3');
-					},
-				},
-			],
-		});
+			};
+		}
 	},
 });

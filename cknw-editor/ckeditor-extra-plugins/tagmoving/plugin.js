@@ -9,17 +9,17 @@ CKEDITOR.plugins.add('tagmoving', {
 		//return element.html();
 	},
 	tagOptions: {
-		'*': [
-			{
+		'*': {
+			'delete-self': {
 				type: 'element',
 				label: 'Delete',
 				click: function (element) {
 					element.remove();
 				},
 			},
-		],
-		'p': [
-			{
+		},
+		'p': {
+			'make-bold': {
 				type: 'element',
 				label: 'Make bold',
 				click: function (element) {
@@ -30,9 +30,9 @@ CKEDITOR.plugins.add('tagmoving', {
 					element.append(sumElement);
 				},
 			},
-		],
-		'a': [
-			{
+		},
+		'a': {
+			'make-italic': {
 				type: 'element',
 				label: 'Make italic',
 				click: function (element) {
@@ -43,7 +43,7 @@ CKEDITOR.plugins.add('tagmoving', {
 					element.append(sumElement);
 				},
 			},
-		],
+		},
 	},
 	ignoreTags: [
 		'html',
@@ -159,9 +159,10 @@ CKEDITOR.plugins.add('tagmoving', {
 		$.each(elementPath, function (index, element) {
 			var wrappedOptions = [];
 			var elementName = element.getName();
-			var options = self.tagOptions['*'];
+			var options = {};
+			$.extend(options, self.tagOptions['*']);
 			if (self.tagOptions[elementName]) {
-				options = options.concat(self.tagOptions[elementName]);
+				$.extend(options, self.tagOptions[elementName]);
 			}
 			if (options) {
 				wrappedOptions.push({

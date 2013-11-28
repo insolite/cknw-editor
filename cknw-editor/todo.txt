@@ -34,8 +34,8 @@
 +set max size for dialogs
 +initial window size
 +select elements in #file-create-dialog
++directory selection on startup
 -fix showing opened file with white screen (floating bug)
--directory selection on startup
 
 	TBD
 -publication templates

@@ -4,13 +4,16 @@ platform="linux"
 executable="${project_name}"
 
 #Dir variables
-dir_root=`dirname "$(readlink -f "$0")"`
-dir_project="${dir_root}/../.."
+dir_build_tools=`dirname "$(readlink -f "$0")"`
+dir_project="${dir_build_tools}/../.."
 dir_builds="${dir_project}/build"
 dir_build="${dir_builds}/${project_name}-${platform}"
 dir_build_tmp="${dir_build}/tmp"
 dir_source="${dir_project}/${project_name}"
 dir_node_webkit="${dir_project}/node-webkit/${platform}"
+
+#Remove previous build
+${dir_build_tools}/clean.sh
 
 #Initial setup
 mkdir -p ${dir_builds}
@@ -42,9 +45,4 @@ cp ${dir_node_webkit}/nw.pak ${dir_build}
 
 #Clean up
 rm -rf ${dir_build_tmp}
-
-#Run application
-run="${dir_build}/${executable}"
-args="/home/oleg/projects/emergency_sunpp"
-${run} ${args}
 

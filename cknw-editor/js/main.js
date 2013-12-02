@@ -40,7 +40,6 @@ $(window).ready(function () {
 						}
 					});
 				}
-				console.log(modes);
 				FileExplorer.create(filepath, filename, group, modes, '');
 				$(this).dialog("close");
 			},

@@ -1,9 +1,9 @@
 {
-    "name": "docedit",
+    "name": "cknw-editor",
     "main": "index.html",
     "description": "node-webkit + CKEditor based WYSIWYG specialized text editor",
     "window": {
-        "title": "node-webkit demo",
+        "title": "cknw-editor",
         "icon": "link.png",
         "toolbar": true,
         "frame": true,

@@ -35,6 +35,7 @@
 +initial window size
 +select elements in #file-create-dialog
 +directory selection on startup
+-mark changed files
 -fix showing opened file with white screen (floating bug)
 
 	TBD

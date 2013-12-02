@@ -10,7 +10,11 @@ set dir_builds=%dir_project%\build
 set dir_build=%dir_builds%\%project_name%-%platform%
 set dir_build_tmp=%dir_build%\tmp
 set dir_source=%dir_project%\%project_name%
+set dir_tmp_source=%dir_build_tmp%\%project_name%
 set dir_node_webkit=%dir_project%\node-webkit\%platform%
+
+::Remove previous build
+call %dir_build_tools%\clean.bat
 
 ::Initial setup
 mkdir %dir_builds%
@@ -23,23 +27,23 @@ mkdir %dir_build_tmp%
 ::Generate links for new extra ckeditor plugins
 cd %dir_source%\ckeditor\plugins
 for /f %%p in ('dir /b %dir_source%\ckeditor-extra-plugins') do (
-	del %%p
+	rmdir %%p
 	mklink /d %%p %dir_source%\ckeditor-extra-plugins\%%p
 )
 
 ::Resolve links (required for windows only)
-echo D | xcopy /s /e /q %dir_source% %dir_build_tmp%
-cd %dir_build_tmp%\%dir_source%\ckeditor-extra-plugins
+echo D | xcopy /s /e /q %dir_source% %dir_tmp_source%
+cd %dir_tmp_source%\ckeditor-extra-plugins
 for /f %%p in ('dir /b') do (
-	del %dir_build_tmp%\%dir_source%\ckeditor\plugins\%%p
-	move %%p %dir_build_tmp%\%dir_source%\ckeditor\plugins
+	rmdir /s /q %dir_tmp_source%\ckeditor\plugins\%%p
+	move %%p %dir_tmp_source%\ckeditor\plugins
 )
 
 ::Project specific block end
 
 ::Zip application
-cd %dir_build_tmp%\%dir_source%
-%dir_build_tools%\7za.exe a -tzip %dir_buil_tmp%\ckeditor.nw *
+cd %dir_tmp_source%
+%dir_build_tools%\7za.exe a -tzip %dir_build_tmp%\%project_name%.nw *
 
 ::Pack application with node-webkit
 copy /b %dir_node_webkit%\nw.exe+%dir_build_tmp%\%project_name%.nw %dir_build%\%executable%
@@ -49,10 +53,5 @@ copy %dir_node_webkit%\nw.pak %dir_build%
 copy %dir_node_webkit%\icudt.dll %dir_build%
 
 ::Clean up
-rmdir /s /e %dir_build_tmp%
-
-::Run application
-set run=%dir_build%\%executable%
-set args=c:\Users\oleg\My Documents\projects\emergency_sunpp
-%run% %args%
-
+cd %dir_build_tools%
+rmdir /s /q %dir_build_tmp%

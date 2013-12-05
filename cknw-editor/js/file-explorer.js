@@ -112,31 +112,33 @@ var FileExplorer = {
         	xmlNode.find('group,page').each(function (index, element) {
         		$(this).remove();
         	});
-        	$('#sidebar-left li[path=""]').each(function (index, element) {
-        		var groupElement = $('<group></group>')
-    			.attr({
-    				'name': $(this).find('> a.filelabel').text(),
-    			});
-    			$('#sidebar-left li[parent="' + $(this).find('> a.filelabel').text() + '"]').each(function (index, element) {
-    				groupElement.append($('<page/>')
+        	$('#sidebar-left li[parent="root"]').each(function (index, element) {
+        		if ($(this).attr('path') == '') {
+	        		var groupElement = $('<group></group>')
+	    			.attr({
+	    				'name': $(this).find('> a.filelabel').text(),
+	    			});
+	    			$('#sidebar-left li[parent="' + $(this).find('> a.filelabel').text() + '"]').each(function (index, element) {
+	    				groupElement.append($('<page/>')
+			    			.attr({
+			    				'path': $(this).attr('path'),
+			    				'name': $(this).find('> a.filelabel').text(),
+			    				'modes': $(this).attr('modes'),
+			    			})
+		    			);
+	    			});
+	        		xmlNode.append(groupElement);
+	        	}
+	        	else {
+	        		xmlNode.append($('<page/>')
 		    			.attr({
 		    				'path': $(this).attr('path'),
 		    				'name': $(this).find('> a.filelabel').text(),
-		    				'modes': $(this).attr('modes'),
+		    				'modes': $(this).attr('modes') || 'default',
 		    			})
 	    			);
-    			});
-        		xmlNode.append(groupElement);
+	        	}
         	});
-        	$('#sidebar-left li[path!=""][parent="root"]').each(function (index, element) {
-				xmlNode.append($('<page/>')
-	    			.attr({
-	    				'path': $(this).attr('path'),
-	    				'name': $(this).find('> a.filelabel').text(),
-	    				'modes': $(this).attr('modes') || 'default',
-	    			})
-    			);
-			});
         	var xmlText = (new XMLSerializer()).serializeToString(xmlDoc);
         	//Remove stupid automatic insertions in group, page tags
         	xmlText = xmlText.split('xmlns="http://www.w3.org/1999/xhtml" ').join('');

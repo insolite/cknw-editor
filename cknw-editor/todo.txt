@@ -36,7 +36,7 @@
 +select elements in #file-create-dialog
 +directory selection on startup
 +mark changed files
--fix resetting order in pages.wprj on creating new file
++fix resetting order in pages.wprj on creating new file
 -fix showing opened file with white screen (floating bug)
 
 	TBD

@@ -38,7 +38,8 @@
 +mark changed files
 +fix resetting order in pages.wprj on creating new file
 +hotkeys
--prevent capturing hotkey events by ckeditor
++fix prevent capturing hotkey events by ckeditor
++fix create file dialog view (esp. checkboxes)
 -fix showing opened file with white screen (floating bug)
 
 	TBD

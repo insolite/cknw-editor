@@ -96,6 +96,29 @@ var FileExplorer = {
 			}
 		});
 		var editor = CKEDITOR.instances[editorId];
+		
+		editor.on('contentDom', function() {
+			this.document.on('keyup', function( evt ) {
+				keyCode = evt.data.getKeystroke();
+				var KEYCODE_Cn = CKEDITOR.CTRL + 78,
+					KEYCODE_Cs = CKEDITOR.CTRL + 83,
+					KEYCODE_Ce = CKEDITOR.CTRL + 69;
+				switch (keyCode) {
+					case KEYCODE_Cn:
+						MainMenu.elements['file']['new'].onclick();
+						break;
+					case KEYCODE_Cs:
+						MainMenu.elements['file']['save'].onclick();
+						break;
+					case KEYCODE_Ce:
+						MainMenu.elements['file']['export'].onclick();
+						break;
+					default:
+						break;
+				}
+			});
+		});
+		
 		editor.setData(filedata);
 		//$.each(loadedModes, function (key, modeName) {
 //			filedata = CKEDITOR.plugins.get(modeName).restore(editor.getData());
@@ -281,7 +304,9 @@ var FileExplorer = {
 	    		title: $('#sidebar-left > ul > li[path="' + filepath + '"] > a')[0].childNodes[0].data,
 	    		content: html,
 	    	});
-	    	self.save(self.path.join(self.publicationDir, filepath), fullHtml);
+	    	self.writeFile(self.path.join(self.publicationDir, filepath), fullHtml, function () {
+	    		//TODO: notification
+	    	});
     	});
     	//TODO: copy resource folders
     	$.each(self.resources, function (name, data) {
@@ -416,7 +441,7 @@ var FileExplorer = {
         var self = this;
         
         self.rootDir = rootDir || process.cwd();
-        self.publicationDir = self.rootDir + '/output'; //TODO: argv possibility
+        self.publicationDir = 'output'; //TODO: argv possibility
         
     	//In current tmp dir create symlink to the plan.wprj for xslt conversion
     	//cause Xslt.getResult is getting xml over http

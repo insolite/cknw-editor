@@ -11,8 +11,8 @@ body { margin: 0; padding: 0; font-size: 14px; }
 		    	#wrapper #editor #sidebar-left > ul > li { cursor: pointer; list-style-type: none; line-height: 24px; margin: 4px 0; border-radius: 8px; }
 		    	#wrapper #editor #sidebar-left > ul > li:not([parent="root"]) { margin-left: 16px; }
 		    	#wrapper #editor #sidebar-left > ul > li[path=""] { background: #ADC0D0; }
-		    	#wrapper #editor #sidebar-left > ul > li:not([path=""]) { background: #EDF0F0; }
-		    	#wrapper #editor #sidebar-left > ul > li:not([path=""]):hover { background: #CDE2E2; }
+		    	#wrapper #editor #sidebar-left > ul > li:not([path=""]) { background: #CDE2E2; }
+		    	#wrapper #editor #sidebar-left > ul > li:not([path=""]):hover { background: #BDD4D4; }
 		    		#wrapper #editor #sidebar-left > ul > li > a { margin: 0 8px 0 8px; text-decoration: none; color: #111; }
 		    		#wrapper #editor #sidebar-left > ul > li > a.unsaved:before { content: '* ' }
 			    	#wrapper #editor #sidebar-left > ul > li > a.current { font-weight: bold; }

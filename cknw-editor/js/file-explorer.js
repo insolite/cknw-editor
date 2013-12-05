@@ -20,6 +20,22 @@ var FileExplorer = {
 		'tagmoving',
 		'enumerating',
 	],
+	getFileListItem: function (filepath) {
+		return $('#sidebar-left > ul > li[path="' + filepath + '"] > a');
+	},
+	setFileUnsaved: function (filepath) {
+		var self = this;
+		
+		var fileListItem = self.getFileListItem(filepath);
+		if (!fileListItem.hasClass('unsaved')) {
+			fileListItem.addClass('unsaved');
+		}
+	},
+	setFileSaved: function (filepath) {
+		var self = this;
+		
+		self.getFileListItem(filepath).removeClass('unsaved');
+	},
     getEditorByFilepath: function (filepath) {
     	var textarea = $('#workspace > textarea[filepath="' + filepath + '"]');
 		return CKEDITOR.instances[textarea.attr('id')];
@@ -55,7 +71,6 @@ var FileExplorer = {
 			loadedModes = modeNamesString.split(',');
 		}
 		CKEDITOR.config.extraPlugins = [
-			//'contextwidgets',
 			//'maxheight', //is not working correctly
 		].concat(loadedModes) // plugins for current mode
 		.join(); //the same as join(',')
@@ -74,6 +89,9 @@ var FileExplorer = {
 						height -= 28;
 					}
 					evt.editor.resize("100%", height); //$(editorId).clientHeight
+				},
+				'change': function (e) {
+					self.setFileUnsaved(self.currentFilepath);
 				},
 			}
 		});
@@ -145,9 +163,6 @@ var FileExplorer = {
 				'parent': group,
 				'modes': modes.join(','),
 			})
-			.css({
-				'margin-left': '0px',
-			})
 			.click(function (e) {
 				$('#sidebar-left > ul > li > a.filelabel').removeClass('current');
 				$(this).find('> a.filelabel').addClass('current opened');
@@ -160,14 +175,13 @@ var FileExplorer = {
 					'href': '#',
 				})
 				.addClass('filelabel')
-				.append($('<i></i>')
-					.addClass('icon-file')
-				)
 				.append(name)
 			)
 			.append($('<div></div>')
 				.addClass('close')
-				.html('x')
+				.append($('<span></span>')
+					.addClass('ui-icon ui-icon-close') //closethick
+				)
 				.click(function (e) {
 					var li = $(this).parent();
 					var filepath = li.attr('path');
@@ -181,7 +195,6 @@ var FileExplorer = {
 				$('#sidebar-left > ul').append(fileElement);
 			}
 			else {
-				fileElement.css('margin-left', '12px');
 				$('#sidebar-left > ul > li[parent="' + group + '"]').last().after(fileElement);
 			}
 			self.updateStructure(function () {
@@ -220,15 +233,16 @@ var FileExplorer = {
     },
     save: function (filepath, data) {
         var self = this;
-        filepath = filepath || self.path.join(self.rootDir, self.currentFilepath);
+        
+        filepath = filepath || self.currentFilepath;
         var text = data || self.getCurrentEditor().getData();
         if (filepath) {
-            self.fs.writeFile(filepath, text, function (err) {
+            self.fs.writeFile(self.path.join(self.rootDir, filepath), text, function (err) {
                 if (err) {
                     throw err;
                 }
                 else {
-                	//TODO: success notification
+                	self.setFileSaved(filepath);
                 }
             });
         }
@@ -238,7 +252,9 @@ var FileExplorer = {
     },
     close: function (filepath) {
         var self = this;
+        
     	var editorId = self.editors[filepath].attr('id');
+    	self.setFileSaved(filepath);
     	CKEDITOR.instances[editorId].destroy(); //Remove CKeditor instance
     	self.editors[filepath].remove(); //Remove <textarea> element
     	delete self.editors[filepath]; //Remove element from array
@@ -257,9 +273,10 @@ var FileExplorer = {
     	}
     	self.readFile('publish-template.html', function (filedata) {
 	    	var tpl = new CKEDITOR.template(filedata.split('\n').join(''));
+	    	//example //TODO: remove when templates will be given
 	    	var fullHtml = tpl.output({
 	    		csspath: 'plan.css',
-	    		title: $('#sidebar-left > ul > li[path="' + filepath + '"] > a')[0].childNodes[1].data,
+	    		title: $('#sidebar-left > ul > li[path="' + filepath + '"] > a')[0].childNodes[0].data,
 	    		content: html,
 	    	});
 	    	self.save(self.path.join(self.publicationDir, filepath), fullHtml);

@@ -3,14 +3,14 @@ var MainMenu = {
 	    'file': {
 	        'new': {
 	            'tooltip': 'Create new file',
-	            'icon': 'file',
+	            'icon': 'document',
 	            onclick: function (event) {
 	            	$('#file-create-dialog').dialog("open");
 	            }
 	        },
 	        'save': {
 	            'tooltip': 'Save file',
-	            'icon': 'hdd',
+	            'icon': 'disk',
 	            onclick: function (event) {
 	            	if (FileExplorer.currentFilepath) {
 	                	FileExplorer.save();
@@ -22,7 +22,7 @@ var MainMenu = {
 	        },
 	        'export': {
 	            'tooltip': 'Publish document',
-	            'icon': 'eye-open',
+	            'icon': 'note',
 	            onclick: function (event) {
 	            	if (FileExplorer.currentFilepath) {
 	                	FileExplorer.publish();
@@ -38,16 +38,17 @@ var MainMenu = {
 		var self = this;
 	    $.each(self.elements, function (j, section) {
 	        $.each(section, function (i, element) {
-	            var button = $('<button></button>')
-	            .attr({
+	        	var button = $('<button></button>')
+	        	.attr({
 	                'title': element['tooltip']
 	            })
-	            .addClass('btn')
-	            .append($('<i></i>')
-	                .addClass('icon-' + element['icon'])
-	            )
-	            .click(function (event) {
-	                $(this).blur(); //Firefox workarond (focus is not lost after alert, so tooltip is showing until we click anywhere)
+	        	.button({
+			    	icons: {
+			    		primary: "ui-icon-" + element['icon'],
+			    	},
+			    	text: false
+			    })
+			    .click(function (event) {
 	                element.onclick(event);
 	            });
 	            $('#main-menu').append(button);

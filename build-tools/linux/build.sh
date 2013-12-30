@@ -22,19 +22,35 @@ mkdir -p ${dir_build_tmp}
 
 #Project specific block begin
 
+#CKEditor submodule download and build
+if [ ! -d "${dir_project}/ckeditor/dev/builder/release" ]; then
+    cd ${dir_project}
+    git submodule init
+    git submodule update
+    #TODO: get built library if exists
+    ./ckeditor/dev/builder/build.sh
+fi
+
 #Generate links for new extra ckeditor plugins
-cd ${dir_source}/ckeditor/plugins
+cd ${dir_project}/ckeditor/dev/builder/release/ckeditor/plugins
 for plugin in ${dir_source}/ckeditor-extra-plugins/*
 do
     rm -f ./$(basename ${plugin})
     ln -s ${plugin} ./$(basename ${plugin})
 done
 
+#Add submodule to archive
+cd "${dir_project}/ckeditor/dev/builder/release"
+zip -9 -r -q -g "${dir_build_tmp}/${project_name}.nw" ./ckeditor
+
+#TODO: add external plugins here
+
+
 #Project specific block end
 
 #Zip application
 cd ${dir_source}
-zip -9 -r -q "${dir_build_tmp}/${project_name}.nw" ./*
+zip -9 -r -q -g "${dir_build_tmp}/${project_name}.nw" ./*
 
 #Pack application with node-webkit
 cat ${dir_node_webkit}/nw ${dir_build_tmp}/${project_name}.nw > ${dir_build}/${executable}

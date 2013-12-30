@@ -1,4 +1,5 @@
 .*.sw[po]
 build/*
 .project
+node-webkit
 

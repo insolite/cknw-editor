@@ -1,6 +1,8 @@
 #Variables
 project_name="cknw-editor"
 platform="linux"
+platform_capacity="x64" #x64, ia32
+node_webkit_version="0.8.4"
 executable="${project_name}"
 
 #Dir variables
@@ -24,10 +26,10 @@ mkdir -p ${dir_build_tmp}
 
 #CKEditor submodule download and build
 if [ ! -d "${dir_project}/ckeditor/dev/builder/release" ]; then
+    #get built library if exists
     cd ${dir_project}
     git submodule init
     git submodule update
-    #TODO: get built library if exists
     ./ckeditor/dev/builder/build.sh
 fi
 
@@ -51,6 +53,14 @@ zip -9 -r -q -g "${dir_build_tmp}/${project_name}.nw" ./ckeditor
 #Zip application
 cd ${dir_source}
 zip -9 -r -q -g "${dir_build_tmp}/${project_name}.nw" ./*
+
+#Get node-webkit build
+if [ ! -d ${dir_node_webkit} ]; then
+    mkdir -p ${dir_node_webkit}
+    cd ${dir_node_webkit}
+    wget -O ./node-webkit.tar.gz "https://s3.amazonaws.com/node-webkit/v0.8.4/node-webkit-v${node_webkit_version}-linux-${platform_capacity}.tar.gz"
+    tar --strip-components=1 -xf ./node-webkit.tar.gz
+fi
 
 #Pack application with node-webkit
 cat ${dir_node_webkit}/nw ${dir_build_tmp}/${project_name}.nw > ${dir_build}/${executable}
